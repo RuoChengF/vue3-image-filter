@@ -104,6 +104,22 @@ export class PixiFilter {
     }
 
     /**
+     * 批量应用多个滤镜效果
+     * @param filterTypes - 滤镜类型数组
+     * @returns 处理后的图片Base64数据数组，每个元素包含滤镜类型和处理结果
+     */
+    public applyFilters(filterTypes: FilterType[]): Array<{ type: FilterType; result: string }> {
+        if (!this.sprite) {
+            throw new Error("No image loaded");
+        }
+
+        return filterTypes.map(filterType => ({
+            type: filterType,
+            result: this.applyFilter(filterType)
+        }));
+    }
+
+    /**
      * 获取处理后的图片数据
      */
     private getProcessedImageData(): string {
