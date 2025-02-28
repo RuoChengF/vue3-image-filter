@@ -1,0 +1,47 @@
+{
+    "name": "pixi-image-filter",
+    "version": "1.0.0",
+    "description": "A powerful image filter library based on PixiJS",
+    "type": "module",
+    "main": "dist/index.js",
+    "module": "dist/index.js",
+    "types": "dist/index.d.ts",
+    "files": [
+        "dist",
+        "README.md"
+    ],
+    "scripts": {
+        "dev": "vite",
+        "build": "vue-tsc -b && vite build",
+        "preview": "vite preview",
+        "build:lib": "tsc -p tsconfig.json && vite build",
+        "prepublishOnly": "npm run build:lib"
+    },
+    "keywords": [
+        "pixi.js",
+        "image-filter",
+        "image-processing",
+        "typescript"
+    ],
+    "author": "全栈若城",
+    "license": "MIT",
+    "repository": {
+        "type": "git",
+        "url": "git@gitcode.com:qq_33681891/pixi-image-filter.git"
+    },
+    "dependencies": {
+        "pixi-filters": "^5.0.0",
+        "pixi.js": "^7.4.2"
+    },
+    "devDependencies": {
+        "@vitejs/plugin-vue": "^5.2.1",
+        "@vue/tsconfig": "^0.7.0",
+        "typescript": "~5.7.2",
+        "vite": "^6.2.0",
+        "vite-plugin-string": "^1.2.3",
+        "vue-tsc": "^2.2.4"
+    },
+    "peerDependencies": {
+        "pixi.js": "^7.0.0"
+    }
+}

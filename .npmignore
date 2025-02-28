@@ -1,0 +1,15 @@
+node_modules/
+src/
+public/
+.vscode/
+*.log
+.DS_Store
+tsconfig*.json
+vite.config.ts
+index.html
+*.vue
+.gitignore
+shims-vue.d.ts
+src/
+*.config.js
+*.config.ts
