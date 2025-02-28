@@ -1,13 +1,23 @@
 {
-  "files": [],
-  "references": [
-    { "path": "./tsconfig.app.json" },
-    { "path": "./tsconfig.node.json" }
-  ],
-  "compilerOptions": {
-    "baseUrl": ".",
-    "paths": {
-      "@/*": ["./src/*"]
-    }
+    "compilerOptions": {
+      "jsx": "react-jsx", // 或 "preserve"
+      "jsxImportSource": "vue", // 指定 Vue 的 JSX 语法
+      "moduleResolution": "node",
+      "baseUrl": ".",
+      "esModuleInterop": true,
+      "noEmit": true,
+      "experimentalDecorators": true,
+      "downlevelIteration": true,
+      // "allowImportingTsExtensions": true,
+      "paths": {
+        "@/*": ["./src/*"],
+        "@/assets": ["./assets/*"],
+        "@/hooks/element/*": ["src/hooks/data/*"],
+        "@/store/helpers/*": ["./src/store/helpers/*"],
+        "@/components/*": ["./src/components/*"],
+        "@/hooks/*": ["./src/hooks/*"]
+      }
+    },
+    "include": ["*", "src/**/*.ts", "src/**/*.js", "src/**/*.vue", "src/**/*.tsx", "src/**/*.d.ts", "src/models/*.ts"],
+    "exclude": ["node_modules"]
   }
-}
