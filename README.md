@@ -8,6 +8,11 @@
 npm install pixi-image-filter
 ```
 
+### 依赖要求
+
+- pixi.js: ^7.4.2
+- pixi-filters: ^5.0.0
+
 ## 基本使用方法
 
 ```typescript
@@ -138,100 +143,43 @@ import ImageFilter from './components/ImageFilter.vue';
 </script>
 ```
 
-### 3. 批量应用多个滤镜
+## 支持的滤镜类型及参数
 
-```vue
-<!-- BatchFilter.vue -->
-<template>
-  <div class="batch-filter">
-    <div v-if="processedImages.length > 0" class="filter-results">
-      <div v-for="(image, index) in processedImages" :key="index" class="filter-result">
-        <h3>{{ image.type }}</h3>
-        <img :src="image.result" :alt="image.type" />
-      </div>
-    </div>
-    <input type="file" @change="handleImageUpload" accept="image/*" />
-  </div>
-</template>
+### 自然效果滤镜 (natural)
+- brightness: 亮度调节
+- saturation: 饱和度调节
+- contrast: 对比度调节
+- temperature: 色温调节
+- gamma: 伽马值调节
 
-<script setup lang="ts">
-import { ref, onMounted, onBeforeUnmount } from 'vue';
-import { PixiFilter } from 'pixi-image-filter';
-import type { FilterType } from 'pixi-image-filter';
+### 去雾效果 (defogging)
+- fogAmount: 去雾程度
 
-const processedImages = ref<Array<{ type: FilterType; result: string }>>([]);
-let filter: PixiFilter | null = null;
+### 锐化效果 (sharpen)
+- dimensions: 锐化维度 [width, height]
+- strength: 锐化强度
 
-// 要应用的滤镜列表
-const filterTypes: FilterType[] = [
-  'natural',
-  'vintage',
-  'grayscale',
-  'colorSplit'
-];
+### 黑白效果 (grayscale)
+无参数，直接转换为黑白图像
 
-onMounted(() => {
-  filter = new PixiFilter({
-    width: 800,
-    height: 800
-  });
-});
+### 反色效果 (invert)
+无参数，直接反转图像颜色
 
-const handleImageUpload = async (event: Event) => {
-  const file = (event.target as HTMLInputElement).files?.[0];
-  if (file && filter) {
-    const reader = new FileReader();
-    reader.onload = async (e) => {
-      const base64 = e.target?.result as string;
-      await filter.loadImage(base64);
-      processedImages.value = filter.applyFilters(filterTypes);
-    };
-    reader.readAsDataURL(file);
-  }
-};
+### 老照片效果 (vintage)
+- sepia: 褐色程度
+- noise: 噪点程度
+- scratch: 划痕程度
 
-onBeforeUnmount(() => {
-  if (filter) {
-    filter.destroy();
-    filter = null;
-  }
-});
-</script>
+### 马赛克效果 (mosaic)
+- uResolution: 分辨率 {x, y}
+- uTileSize: 马赛克块大小 {x, y}
 
-<style scoped>
-.batch-filter {
-  padding: 20px;
-}
+### 高斯模糊效果 (gaussian)
+使用PIXI的TiltShiftFilter实现，自动根据图片尺寸调整模糊程度
 
-.filter-results {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 20px;
-  margin-top: 20px;
-}
-
-.filter-result {
-  text-align: center;
-}
-
-.filter-result img {
-  max-width: 100%;
-  height: auto;
-}
-</style>
-```
-
-## 支持的滤镜类型
-
-- `natural`: 自然效果滤镜
-- `defogging`: 去雾效果
-- `sharpen`: 锐化效果
-- `grayscale`: 黑白效果
-- `invert`: 反色效果
-- `vintage`: 老照片效果
-- `mosaic`: 马赛克效果
-- `gaussian`: 高斯模糊效果
-- `colorSplit`: 颜色分离效果
+### 颜色分离效果 (colorSplit)
+- offset: 颜色偏移量 [x, y]
+- angle: 分离角度
 
 ## API文档
 
@@ -284,11 +232,14 @@ destroy(): void
 
 ## 注意事项
 
-1. 该库依赖于PixiJS，请确保您的项目中已安装`pixi.js@^7.0.0`。
+1. 该库依赖于PixiJS，请确保您的项目中已安装正确版本的依赖：
+   - pixi.js@^7.4.2
+   - pixi-filters@^5.0.0
 2. 在Vue组件中使用时，请确保在组件卸载前调用`destroy()`方法释放资源。
 3. 所有滤镜操作都是同步的，但加载图片是异步操作。
 4. 在处理大尺寸图片时，建议适当调整`width`和`height`参数以获得更好的性能。
 5. 返回的Base64图片数据可以直接用于`<img>`标签的`src`属性。
+6. 每个滤镜类型都有其特定的参数设置，请参考滤镜类型及参数部分进行调整。
 
 ## 许可证
 
