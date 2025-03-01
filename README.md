@@ -1,17 +1,17 @@
-# pixi-image-filter
+# vue3-image-filter
 
 一个基于PixiJS的强大图像滤镜处理库，支持多种滤镜效果，包括自然效果、去雾、锐化、黑白、反色、老照片、马赛克、高斯模糊和颜色分离等。
 
 ## 安装
 
 ```bash
-npm install pixi-image-filter
+npm install vue3-image-filter
 ```
 
 或者使用yarn：
 
 ```bash
-yarn add pixi-image-filter
+yarn add vue3-image-filter
 ```
 
 ### 依赖要求
@@ -24,7 +24,7 @@ yarn add pixi-image-filter
 ### 简单使用
 
 ```typescript
-import { PixiFilter } from 'pixi-image-filter';
+import { PixiFilter } from 'vue3-image-filter';
 
 // 创建滤镜实例
 const filter = new PixiFilter({
@@ -49,7 +49,7 @@ filter.destroy();
 ### 批量应用多个滤镜
 
 ```typescript
-import { PixiFilter, BatchFilterData } from 'pixi-image-filter';
+import { PixiFilter, BatchFilterData } from 'vue3-image-filter';
 
 // 创建滤镜实例
 const filter = new PixiFilter();
@@ -105,8 +105,8 @@ filter.destroy();
 
 <script setup lang="ts">
 import { ref, watch, onMounted, onBeforeUnmount } from 'vue';
-import { PixiFilter } from 'pixi-image-filter';
-import type { FilterType, BatchFilterData } from 'pixi-image-filter';
+import { PixiFilter } from 'vue3-image-filter';
+import type { FilterType, BatchFilterData } from 'vue3-image-filter';
 
 const processedImage = ref<string>('');
 const currentFilter = ref<FilterType>('natural');
@@ -216,7 +216,7 @@ import ImageFilter from './components/ImageFilter.vue';
 
 <script setup lang="ts">
 import { ref, onMounted, onBeforeUnmount } from 'vue';
-import { PixiFilter, BatchFilterData } from 'pixi-image-filter';
+import { PixiFilter, BatchFilterData } from 'vue3-image-filter';
 
 const processedImages = ref<BatchFilterData[]>([]);
 let filter: PixiFilter | null = null;
