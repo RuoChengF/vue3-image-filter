@@ -15,11 +15,17 @@ declare module 'pixi-image-filter' {
     height?: number;
   }
 
+  export interface BatchFilterData {
+    filterType: FilterType;
+    label?: string;
+    result: string;
+  }
+
   export class PixiFilter {
     constructor(options?: FilterOptions);
     loadImage(imageSource: string): Promise<void>;
-    applyFilter(filterType: FilterType): string;
-    applyFilters(filterTypes: FilterType[]): Array<{ type: FilterType; result: string }>;
+    applyFilter(filterData: FilterType | BatchFilterData): BatchFilterData;
+    applyFilters(filterDataArray: BatchFilterData[]): BatchFilterData[];
     destroy(): void;
   }
 }

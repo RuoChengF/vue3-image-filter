@@ -10,7 +10,12 @@ import {
   createGaussianBlurFilter,
   createColorSplitFilter,
 } from "../utils/shadersUtils";
-import type { FilterOptions, FilterType, FilterCreator } from "@/utils/types";
+import type {
+  FilterOptions,
+  FilterType,
+  FilterCreator,
+  BatchFilterData,
+} from "../utils/types";
 
 export class PixiFilter {
   private app: PIXI.Application;
@@ -51,10 +56,10 @@ export class PixiFilter {
 
   /**
    * 应用滤镜效果
-   * @param filterType - 滤镜类型
-   * @returns 处理后的图片Base64数据
+   * @param filterData - 包含滤镜类型和标签的数据，或直接传入滤镜类型
+   * @returns 处理后的数据，包含滤镜类型、标签和处理结果
    */
-  public applyFilter(filterType: FilterType): string {
+  public applyFilter(filterData: BatchFilterData | FilterType): BatchFilterData {
     if (!this.sprite) {
       throw new Error("No image loaded");
     }
@@ -64,6 +69,13 @@ export class PixiFilter {
       this.sprite.filters = [];
     }
 
+    // 处理直接传入FilterType的情况
+    const filterType = typeof filterData === 'string' ? filterData : filterData.filterType;
+    const filterLabel = typeof filterData === 'string' ? filterType : filterData.label;
+    const normalizedFilterData = typeof filterData === 'string' 
+      ? { filterType, label: filterType, result: '' } 
+      : filterData;
+    
     // 创建新滤镜
     const filterCreator = this.getFilterCreator(filterType);
     if (!filterCreator) {
@@ -100,35 +112,41 @@ export class PixiFilter {
     }
 
     // 渲染并返回结果
-    return this.getProcessedImageData();
+    return this.getProcessedImageData(normalizedFilterData);
   }
 
   /**
    * 批量应用多个滤镜效果
-   * @param filterTypes - 滤镜类型数组
-   * @returns 处理后的图片Base64数据数组，每个元素包含滤镜类型和处理结果
+   * @param filterDataArray - 滤镜数据数组，每个元素包含滤镜类型和标签
+   * @returns 处理后的数据数组，每个元素包含滤镜类型和处理结果
    */
   public applyFilters(
-    filterTypes: FilterType[]
-  ): Array<{ type: FilterType; result: string }> {
+    filterDataArray: BatchFilterData[]
+  ): BatchFilterData[] {
     if (!this.sprite) {
       throw new Error("No image loaded");
     }
 
-    return filterTypes.map((filterType) => ({
-      type: filterType,
-      result: this.applyFilter(filterType),
-    }));
+    return filterDataArray.map((filterData) => 
+      this.applyFilter(filterData)
+    );
   }
 
   /**
    * 获取处理后的图片数据
+   * @param data - 包含滤镜类型和标签的数据
+   * @returns 处理后的数据，包含滤镜类型、标签和处理结果
    */
-  private getProcessedImageData(): string {
+  private getProcessedImageData(data: BatchFilterData): BatchFilterData {
     this.app.render();
     // 将 app.view 转换为 HTMLCanvasElement 以使用 toDataURL 方法
     const canvas = this.app.view as unknown as HTMLCanvasElement;
-    return canvas.toDataURL("image/png");
+    const params = {
+      filterType: data.filterType,
+      label: data.label,
+      result: canvas.toDataURL("image/png"),
+    };
+    return params;
   }
 
   /**

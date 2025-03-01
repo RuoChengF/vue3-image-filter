@@ -1,2 +1,2 @@
 export { PixiFilter } from "./core/PixiFilter";
-export { FilterOptions } from "./utils/types";
+export { FilterOptions, BatchFilterData } from "./utils/types";

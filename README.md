@@ -8,12 +8,20 @@
 npm install pixi-image-filter
 ```
 
+或者使用yarn：
+
+```bash
+yarn add pixi-image-filter
+```
+
 ### 依赖要求
 
 - pixi.js: ^7.4.2
 - pixi-filters: ^5.0.0
 
 ## 基本使用方法
+
+### 简单使用
 
 ```typescript
 import { PixiFilter } from 'pixi-image-filter';
@@ -28,7 +36,42 @@ const filter = new PixiFilter({
 await filter.loadImage('path/to/your/image.jpg');
 
 // 应用滤镜
-const processedImageBase64 = filter.applyFilter('natural'); // 返回处理后的图片Base64数据
+const processedImageBase64 = filter.applyFilter({
+  filterType: 'natural',
+  label: '自然效果',
+  result: ''
+}).result;
+
+// 使用完毕后销毁实例
+filter.destroy();
+```
+
+### 批量应用多个滤镜
+
+```typescript
+import { PixiFilter, BatchFilterData } from 'pixi-image-filter';
+
+// 创建滤镜实例
+const filter = new PixiFilter();
+
+// 加载图片
+await filter.loadImage('path/to/your/image.jpg');
+
+// 定义要应用的滤镜列表
+const filterList: BatchFilterData[] = [
+  { filterType: 'natural', label: '自然效果', result: '' },
+  { filterType: 'grayscale', label: '黑白效果', result: '' },
+  { filterType: 'vintage', label: '老照片效果', result: '' },
+  { filterType: 'invert', label: '反色效果', result: '' }
+];
+
+// 批量应用滤镜
+const results = filter.applyFilters(filterList);
+
+// 处理结果
+results.forEach(item => {
+  console.log(`${item.label}: ${item.result.substring(0, 30)}...`);
+});
 
 // 使用完毕后销毁实例
 filter.destroy();
@@ -61,9 +104,9 @@ filter.destroy();
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onBeforeUnmount } from 'vue';
+import { ref, watch, onMounted, onBeforeUnmount } from 'vue';
 import { PixiFilter } from 'pixi-image-filter';
-import type { FilterType } from 'pixi-image-filter';
+import type { FilterType, BatchFilterData } from 'pixi-image-filter';
 
 const processedImage = ref<string>('');
 const currentFilter = ref<FilterType>('natural');
@@ -85,7 +128,12 @@ const handleImageUpload = async (event: Event) => {
     reader.onload = async (e) => {
       const base64 = e.target?.result as string;
       await filter.loadImage(base64);
-      processedImage.value = filter.applyFilter(currentFilter.value);
+      const result = filter.applyFilter({
+        filterType: currentFilter.value,
+        label: '当前效果',
+        result: ''
+      });
+      processedImage.value = result.result;
     };
     reader.readAsDataURL(file);
   }
@@ -94,7 +142,12 @@ const handleImageUpload = async (event: Event) => {
 // 监听滤镜类型变化
 watch(currentFilter, () => {
   if (filter && processedImage.value) {
-    processedImage.value = filter.applyFilter(currentFilter.value);
+    const result = filter.applyFilter({
+      filterType: currentFilter.value,
+      label: '当前效果',
+      result: ''
+    });
+    processedImage.value = result.result;
   }
 });
 
@@ -143,21 +196,118 @@ import ImageFilter from './components/ImageFilter.vue';
 </script>
 ```
 
+### 3. 批量处理多种滤镜效果示例
+
+```vue
+<!-- BatchFilterDemo.vue -->
+<template>
+  <div class="batch-filter">
+    <div class="upload-area">
+      <input type="file" @change="handleImageUpload" accept="image/*" />
+    </div>
+    <div class="filter-gallery" v-if="processedImages.length > 0">
+      <div v-for="(img, index) in processedImages" :key="index" class="filter-item">
+        <img :src="img.result" :alt="img.label" />
+        <p>{{ img.label }}</p>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script setup lang="ts">
+import { ref, onMounted, onBeforeUnmount } from 'vue';
+import { PixiFilter, BatchFilterData } from 'pixi-image-filter';
+
+const processedImages = ref<BatchFilterData[]>([]);
+let filter: PixiFilter | null = null;
+
+// 初始化滤镜实例
+onMounted(() => {
+  filter = new PixiFilter({
+    width: 600,
+    height: 600
+  });
+});
+
+// 定义滤镜列表
+const filterList: BatchFilterData[] = [
+  { filterType: 'natural', label: '自然效果', result: '' },
+  { filterType: 'grayscale', label: '黑白效果', result: '' },
+  { filterType: 'vintage', label: '老照片效果', result: '' },
+  { filterType: 'invert', label: '反色效果', result: '' },
+  { filterType: 'defogging', label: '去雾效果', result: '' },
+  { filterType: 'sharpen', label: '锐化效果', result: '' },
+  { filterType: 'mosaic', label: '马赛克效果', result: '' },
+  { filterType: 'gaussian', label: '高斯模糊效果', result: '' },
+  { filterType: 'colorSplit', label: '颜色分离效果', result: '' }
+];
+
+// 处理图片上传
+const handleImageUpload = async (event: Event) => {
+  const file = (event.target as HTMLInputElement).files?.[0];
+  if (file && filter) {
+    const reader = new FileReader();
+    reader.onload = async (e) => {
+      const base64 = e.target?.result as string;
+      await filter.loadImage(base64);
+      // 批量应用所有滤镜
+      processedImages.value = filter.applyFilters(filterList);
+    };
+    reader.readAsDataURL(file);
+  }
+};
+
+// 组件销毁时清理资源
+onBeforeUnmount(() => {
+  if (filter) {
+    filter.destroy();
+    filter = null;
+  }
+});
+</script>
+
+<style scoped>
+.batch-filter {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.filter-gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 20px;
+}
+
+.filter-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.filter-item img {
+  max-width: 100%;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+</style>
+```
+
 ## 支持的滤镜类型及参数
 
 ### 自然效果滤镜 (natural)
-- brightness: 亮度调节
-- saturation: 饱和度调节
-- contrast: 对比度调节
-- temperature: 色温调节
-- gamma: 伽马值调节
+- brightness: 亮度调节，默认值 1.05
+- saturation: 饱和度调节，默认值 1.1
+- contrast: 对比度调节，默认值 1.1
+- temperature: 色温调节，默认值 0.15
+- gamma: 伽马值调节，默认值 1.1
 
 ### 去雾效果 (defogging)
-- fogAmount: 去雾程度
+- fogAmount: 去雾程度，默认值 0.8
 
 ### 锐化效果 (sharpen)
-- dimensions: 锐化维度 [width, height]
-- strength: 锐化强度
+- dimensions: 锐化维度 [width, height]，默认值 [800, 600]
+- strength: 锐化强度，默认值 0.5
 
 ### 黑白效果 (grayscale)
 无参数，直接转换为黑白图像
@@ -209,18 +359,18 @@ async loadImage(imageSource: string): Promise<void>
 ##### applyFilter
 
 ```typescript
-applyFilter(filterType: FilterType): string
+applyFilter(filterData: BatchFilterData): BatchFilterData
 ```
 
-应用指定类型的滤镜，返回处理后的图片Base64数据。
+应用指定类型的滤镜，返回处理后的图片数据，包含滤镜类型、标签和Base64格式的处理结果。
 
 ##### applyFilters
 
 ```typescript
-applyFilters(filterTypes: FilterType[]): Array<{ type: FilterType; result: string }>
+applyFilters(filterDataArray: BatchFilterData[]): BatchFilterData[]
 ```
 
-批量应用多个滤镜，返回包含滤镜类型和处理结果的数组。
+批量应用多个滤镜，返回包含滤镜类型、标签和处理结果的数组。
 
 ##### destroy
 
@@ -230,6 +380,43 @@ destroy(): void
 
 销毁实例，释放资源。
 
+### 类型定义
+
+#### FilterType
+
+```typescript
+type FilterType = 
+  | 'natural'
+  | 'defogging'
+  | 'sharpen'
+  | 'grayscale'
+  | 'invert'
+  | 'vintage'
+  | 'mosaic'
+  | 'gaussian'
+  | 'colorSplit';
+```
+
+#### FilterOptions
+
+```typescript
+interface FilterOptions {
+  width?: number;
+  height?: number;
+}
+```
+
+#### BatchFilterData
+
+```typescript
+type BatchFilterData = {
+  filterType: FilterType;
+  label?: string;
+  result: string;
+};
+```
+
+ 
 ## 注意事项
 
 1. 该库依赖于PixiJS，请确保您的项目中已安装正确版本的依赖：
