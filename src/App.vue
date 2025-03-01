@@ -1,11 +1,3 @@
-<!--
- * @Author: yangchunpeng ruochengflag@163.com
- * @Date: 2025-02-27 18:10:47
- * @LastEditors: yangchunpeng ruochengflag@163.com
- * @LastEditTime: 2025-02-28 14:56:18
- * @FilePath: /pixiFilter/src/App.vue
- * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
--->
 <script setup lang="ts">
 import ImageFilter from "@/components/ImageFilter.vue";
 // import HelloWorld from '@/components/HelloWorld.vue'
@@ -13,8 +5,11 @@ import ImageFilter from "@/components/ImageFilter.vue";
 
 <template>
   <div class="app-container">
-    <ImageFilter />
-    <!-- <HelloWorld /> -->
+    <nav class="nav-menu">
+      <router-link to="/" class="nav-item">批量滤镜</router-link>
+      <router-link to="/single" class="nav-item">单个滤镜</router-link>
+    </nav>
+    <router-view></router-view>
   </div>
 </template>
 
@@ -23,6 +18,33 @@ import ImageFilter from "@/components/ImageFilter.vue";
   width: 100vw;
   height: 100vh;
   background-color: #f0f0f0;
+  padding: 20px;
+}
+
+.nav-menu {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.nav-item {
+  padding: 8px 16px;
+  border-radius: 4px;
+  background-color: #fff;
+  color: #333;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.nav-item:hover {
+  background-color: #42b883;
+  color: #fff;
+}
+
+.router-link-active {
+  background-color: #42b883;
+  color: #fff;
 }
 </style>
 

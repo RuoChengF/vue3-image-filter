@@ -59,7 +59,7 @@ export class PixiFilter {
    * @param filterData - 包含滤镜类型和标签的数据，或直接传入滤镜类型
    * @returns 处理后的数据，包含滤镜类型、标签和处理结果
    */
-  public applyFilter(filterData: BatchFilterData | FilterType): BatchFilterData {
+  public applyFilter(filterData: BatchFilterData): BatchFilterData {
     if (!this.sprite) {
       throw new Error("No image loaded");
     }
@@ -70,10 +70,8 @@ export class PixiFilter {
     }
 
     // 处理直接传入FilterType的情况
-    const filterType = typeof filterData === 'string' ? filterData : filterData.filterType;
-    const normalizedFilterData = typeof filterData === 'string'
-      ? { filterType, label: filterType, result: '' }
-      : filterData;
+    const filterType =  filterData.filterType;
+    const normalizedFilterData =  filterData;
 
     // 创建新滤镜
     const filterCreator = this.getFilterCreator(filterType);
@@ -102,7 +100,7 @@ export class PixiFilter {
     //   )(this.sprite);
     // } else {
       // 创建基础滤镜并应用自定义参数
-      this.currentFilter = (filterCreator as ( sprite: PIXI.Sprite,filterParams) => PIXI.Filter)(
+      this.currentFilter = (filterCreator as ( sprite: PIXI.Sprite, filterParams) => PIXI.Filter)(
         this.sprite,
         normalizedFilterData?.filterParams ?? null,
       );
