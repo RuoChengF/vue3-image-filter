@@ -39,22 +39,39 @@ export interface FilterParams {
     angle: number;
   };
   mosaic: {
-    uResolution: { x: number; y: number };
-    uTileSize: { x: number; y: number };
+    uTileSize: { x: number; y: number }; // 像素块大小
   };
 }
 
 // 滤镜创建函数类型
 export type FilterCreator = {
-  natural: () => PIXI.Filter;
-  defogging: () => PIXI.Filter;
-  sharpen: () => PIXI.Filter;
-  grayscale: () => PIXI.Filter;
-  invert: () => PIXI.Filter;
-  vintage: () => PIXI.Filter;
-  mosaic: (options: MosaicFilterOptions) => PIXI.Filter;
-  gaussian: (sprite: PIXI.Sprite) => TiltShiftFilter;
-  colorSplit: () => PIXI.Filter;
+  natural: (
+    sprite: PIXI.Sprite,
+    filterParams?: FilterParams["natural"]
+  ) => PIXI.Filter;
+  defogging: (
+    sprite: PIXI.Sprite,
+    filterParams?: FilterParams["defogging"]
+  ) => PIXI.Filter;
+  sharpen: (
+    sprite: PIXI.Sprite,
+    filterParams?: FilterParams["sharpen"]
+  ) => PIXI.Filter;
+  grayscale: (sprite: PIXI.Sprite, filterParams?: null) => PIXI.Filter;
+  invert: (sprite: PIXI.Sprite, filterParams?: null) => PIXI.Filter;
+  vintage: (
+    sprite: PIXI.Sprite,
+    filterParams?: FilterParams["vintage"]
+  ) => PIXI.Filter;
+  mosaic: (
+    sprite: PIXI.Sprite,
+    filterParams?: FilterParams["mosaic"]
+  ) => PIXI.Filter;
+  gaussian: (sprite: PIXI.Sprite, filterParams?) => TiltShiftFilter;
+  colorSplit: (
+    sprite: PIXI.Sprite,
+    filterParams?: FilterParams["colorSplit"]
+  ) => PIXI.Filter;
 };
 
 // 滤镜类型字符串联合类型
@@ -71,4 +88,5 @@ export type BatchFilterData = {
   filterType: FilterType;
   label?: string;
   result: string;
+  filterParams?: Partial<FilterParams[keyof FilterParams]>;
 };

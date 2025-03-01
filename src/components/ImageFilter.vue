@@ -36,7 +36,16 @@ onMounted(() => {
 const filterList: BatchFilterData[] = [
   { filterType: "natural", label: "自然效果", result: "" },
   { filterType: "grayscale", label: "黑白效果", result: "" },
-  { filterType: "vintage", label: "老照片效果", result: "" },
+  {
+    filterType: "vintage",
+    label: "老照片效果",
+    result: "",
+    // filterParams: {
+    //   sepia: 0, // 80%的复古程度
+    //   noise: 0.2, // 20%的噪点
+    //   scratch: 0.1, // 10%的划痕
+    // },
+  },
   { filterType: "invert", label: "反色效果", result: "" },
   { filterType: "defogging", label: "去雾效果", result: "" },
   { filterType: "sharpen", label: "锐化效果", result: "" },

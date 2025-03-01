@@ -71,11 +71,10 @@ export class PixiFilter {
 
     // 处理直接传入FilterType的情况
     const filterType = typeof filterData === 'string' ? filterData : filterData.filterType;
-    const filterLabel = typeof filterData === 'string' ? filterType : filterData.label;
-    const normalizedFilterData = typeof filterData === 'string' 
-      ? { filterType, label: filterType, result: '' } 
+    const normalizedFilterData = typeof filterData === 'string'
+      ? { filterType, label: filterType, result: '' }
       : filterData;
-    
+
     // 创建新滤镜
     const filterCreator = this.getFilterCreator(filterType);
     if (!filterCreator) {
@@ -83,26 +82,35 @@ export class PixiFilter {
     }
 
     // 应用滤镜
-    if (filterType === "mosaic") {
-      // 类型断言确保 TypeScript 知道这是 mosaic 滤镜创建函数
-      this.currentFilter = (
-        filterCreator as (options: {
-          width: number;
-          height: number;
-        }) => PIXI.Filter
-      )({
-        width: this.sprite.width,
-        height: this.sprite.height,
-      });
-    } else if (filterType === "gaussian") {
-      // 类型断言确保 TypeScript 知道这是 gaussian 滤镜创建函数
-      this.currentFilter = (
-        filterCreator as (sprite: PIXI.Sprite) => PIXI.Filter
-      )(this.sprite);
-    } else {
-      // 类型断言确保 TypeScript 知道这是无参数滤镜创建函数
-      this.currentFilter = (filterCreator as () => PIXI.Filter)();
-    }
+    // if (filterType === "mosaic") {
+    //   // 类型断言确保 TypeScript 知道这是 mosaic 滤镜创建函数
+    //   this.currentFilter = (
+    //     filterCreator as (options: {
+    //       width: number;
+    //       height: number;
+    //       filterParams?: any;
+    //     }) => PIXI.Filter
+    //   )({
+    //     width: this.sprite.width,
+    //     height: this.sprite.height,
+    //     filterParams:normalizedFilterData?.filterParams ?? null
+    //   });
+    // } else if (filterType === "gaussian") {
+    //   // 类型断言确保 TypeScript 知道这是 gaussian 滤镜创建函数
+    //   this.currentFilter = (
+    //     filterCreator as (sprite: PIXI.Sprite) => PIXI.Filter
+    //   )(this.sprite);
+    // } else {
+      // 创建基础滤镜并应用自定义参数
+      this.currentFilter = (filterCreator as ( sprite: PIXI.Sprite,filterParams) => PIXI.Filter)(
+        this.sprite,
+        normalizedFilterData?.filterParams ?? null,
+      );
+    //   // 如果用户传入了自定义参数，则应用这些参数
+    //   if (normalizedFilterData.filterParams) {
+    //     Object.assign(this.currentFilter.uniforms, normalizedFilterData.filterParams);
+    //   }
+    // }
 
     // 只有当滤镜存在时才应用滤镜，否则保持原图
     if (this.currentFilter) {
@@ -127,7 +135,7 @@ export class PixiFilter {
       throw new Error("No image loaded");
     }
 
-    return filterDataArray.map((filterData) => 
+    return filterDataArray.map((filterData) =>
       this.applyFilter(filterData)
     );
   }

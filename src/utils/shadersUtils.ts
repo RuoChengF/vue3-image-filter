@@ -12,46 +12,80 @@ import * as PIXI from "pixi.js";
 import { TiltShiftFilter } from "pixi-filters";
 
 // 创建自然效果滤镜
-export const createNaturalFilter = (): PIXI.Filter => {
+export const createNaturalFilter = (
+  sprite: PIXI.Sprite,
+  filterParams
+): PIXI.Filter => {
+  const defaultParams = {
+    brightness: 1.05, // 亮度
+    saturation: 1.05, // 饱和度
+    contrast: 1.05, // 对比度
+    temperature: 0.05, // 色温
+    gamma: 1.05, // 伽马值
+  };
   return new PIXI.Filter("", naturalShader, {
-    brightness: 1.05, // 轻微提高亮度
-    saturation: 1.1, // 适度增加饱和度
-    contrast: 1.1, // 轻微提升对比度
-    temperature: 0.15, // 添加暖色调
-    gamma: 1.1, // gamma校正
+    ...defaultParams,
+    ...filterParams,
   });
 };
 
 // 创建去雾效果滤镜
-export const createDefoggingFilter = (): PIXI.Filter => {
-  return new PIXI.Filter("", defoggingShader, {
+export const createDefoggingFilter = (
+  sprite: PIXI.Sprite,
+  filterParams
+): PIXI.Filter => {
+  const defaultParams = {
     fogAmount: 0.8, // 去雾强度
+  };
+  return new PIXI.Filter("", defoggingShader, {
+    ...defaultParams,
+    ...filterParams,
   });
 };
 
 // 创建锐化效果滤镜
-export const createSharpenFilter = (): PIXI.Filter => {
-  return new PIXI.Filter("", sharpenShader, {
-    dimensions: [800, 600], // 图像尺寸
+export const createSharpenFilter = (
+  sprite: PIXI.Sprite,
+  filterParams
+): PIXI.Filter => {
+  const defaultParams = {
     strength: 0.5, // 锐化强度
+  };
+  return new PIXI.Filter("", sharpenShader, {
+    dimensions: [sprite.width, sprite.height], // 图像尺寸
+    ...defaultParams,
+    ...filterParams,
   });
 };
 // 创建黑白效果滤镜
-export const createGrayscaleFilter = (): PIXI.Filter => {
+export const createGrayscaleFilter = (
+  sprite: PIXI.Sprite,
+  filterParams
+): PIXI.Filter => {
   return new PIXI.Filter("", grayscaleShader);
 };
 
 // 创建反色效果滤镜
-export const createInvertFilter = (): PIXI.Filter => {
+export const createInvertFilter = (
+  sprite: PIXI.Sprite,
+  filterParams
+): PIXI.Filter => {
   return new PIXI.Filter("", invertShader);
 };
 
 // 创建老照片效果滤镜
-export const createVintageFilter = (): PIXI.Filter => {
-  return new PIXI.Filter("", vintageShader, {
+export const createVintageFilter = (
+  sprite: PIXI.Sprite,
+  filterParams
+): PIXI.Filter => {
+  const defaultParams = {
     sepia: 0.8, // 80%的复古程度
     noise: 0.2, // 20%的噪点
     scratch: 0.1, // 10%的划痕
+  };
+  return new PIXI.Filter("", vintageShader, {
+    ...defaultParams,
+    ...filterParams,
   });
 };
 
@@ -62,7 +96,8 @@ export const createVintageFilter = (): PIXI.Filter => {
  * @returns {TiltShiftFilter} 返回倾斜位移滤镜实例
  */
 export const createGaussianBlurFilter = (
-  sprite: PIXI.Sprite
+  sprite: PIXI.Sprite,
+  filterParams
 ): TiltShiftFilter => {
   const startPoint = new PIXI.Point(0, 0);
   const endPoint = new PIXI.Point(sprite.width, sprite.height);
@@ -70,27 +105,33 @@ export const createGaussianBlurFilter = (
 };
 
 // 创建色调分离滤镜
-export const createColorSplitFilter = (): PIXI.Filter => {
-  return new PIXI.Filter("", colorSplitShader, {
+export const createColorSplitFilter = (
+  sprite: PIXI.Sprite,
+  filterParams
+): PIXI.Filter => {
+  const defaultParams = {
     offset: [5.0, 0.0], // 水平偏移5个像素
     angle: 0.0, // 初始角度为0度
+  };
+  return new PIXI.Filter("", colorSplitShader, {
+    ...defaultParams,
+    ...filterParams,
   });
 };
 
 // 创建马赛克效果滤镜
-interface MosaicFilterOptions {
-  width: number;
-  height: number;
-}
 
-export const createMosaicFilter = ({
-  width,
-  height,
-}: MosaicFilterOptions): PIXI.Filter => {
-  console.log("createMosaicFilter", width, height);
-
+export const createMosaicFilter = (
+  sprite: PIXI.Sprite,
+  filterParams
+): PIXI.Filter => {
+  console.log("createMosaicFilter", sprite.width, sprite.height);
+  const defaultParams = {
+    uTileSize: { x: 10, y: 10 }, // 像素块大小
+  };
   return new PIXI.Filter("", mosaicShader, {
-    uResolution: { x: width, y: height }, // 应该是你的画布分辨率
-    uTileSize: { x: 20, y: 20 }, // 马赛克块的大小
+    uResolution: { x: sprite.width, y: sprite.height }, // 应该是你的画布分辨率
+    ...defaultParams,
+    ...filterParams,
   });
 };
