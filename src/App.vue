@@ -1,64 +1,59 @@
 <script setup lang="ts">
-import ImageFilter from "@/components/ImageFilter.vue";
-// import HelloWorld from '@/components/HelloWorld.vue'
+import { ref } from "vue";
+import { ElMenu, ElMenuItem } from "element-plus";
+import Logo from "@/assets/02.jpg";
+const activeIndex = ref("1");
+const handleSelect = (key: string, keyPath: string[]) => {
+  console.log(key, keyPath);
+};
 </script>
 
 <template>
   <div class="app-container">
-    <nav class="nav-menu">
-      <router-link to="/" class="nav-item">批量滤镜</router-link>
-      <router-link to="/single" class="nav-item">单个滤镜</router-link>
-    </nav>
-    <router-view></router-view>
+    <el-menu
+      :default-active="activeIndex"
+      class="el-menu-demo"
+      mode="horizontal"
+      :ellipsis="false"
+      @select="handleSelect"
+    >
+      <el-menu-item index="0">
+        <el-image style="width: 100px; height: 50px" :src="Logo" fit="auto" />
+      </el-menu-item>
+      <el-menu-item index="1">
+        <router-link to="/index" class="nav-item">总体演示</router-link>
+      </el-menu-item>
+      <el-menu-item index="2">
+        <router-link to="/single" class="nav-item">单个滤镜</router-link>
+      </el-menu-item>
+      <el-menu-item index="3">
+        <router-link to="/batch" class="nav-item">批量滤镜</router-link>
+      </el-menu-item>
+    </el-menu>
+
+    <router-view> </router-view>
   </div>
 </template>
 
-<style>
+<style scoped lang="scss">
 .app-container {
-  width: 100vw;
-  height: 100vh;
+  width: 100%;
+  height: 100%;
   background-color: #f0f0f0;
-  padding: 20px;
-}
 
-.nav-menu {
-  display: flex;
-  justify-content: center;
-  gap: 20px;
-  margin-bottom: 20px;
-}
+  .el-menu {
+    &--horizontal {
+      > .el-menu-item:nth-child(1) {
+        margin-right: auto;
+      }
+    }
+  }
 
-.nav-item {
-  padding: 8px 16px;
-  border-radius: 4px;
-  background-color: #fff;
-  color: #333;
-  text-decoration: none;
-  transition: all 0.3s ease;
-}
-
-.nav-item:hover {
-  background-color: #42b883;
-  color: #fff;
-}
-
-.router-link-active {
-  background-color: #42b883;
-  color: #fff;
-}
-</style>
-
-<style scoped>
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.vue:hover {
-  filter: drop-shadow(0 0 2em #42b883aa);
+  .nav-item {
+    border-radius: 4px;
+    color: #333;
+    text-decoration: none;
+    transition: all 0.3s ease;
+  }
 }
 </style>

@@ -39,7 +39,9 @@ export interface FilterParams {
     angle: number;
   };
   mosaic: {
-    uTileSize: { x: number; y: number }; // 像素块大小
+    // 像素块大小
+    uTileSizeX: number;
+    uTileSizeY: number;
   };
 }
 
@@ -83,10 +85,19 @@ export type FilterType = keyof FilterCreator;
  *  @filterType - 滤镜类型
  *  @label - 滤镜名称
  *  @result - 处理后的图片Base64数据
+ *  @active - 是否激活 <当前的保留参数>
  */
 export type BatchFilterData = {
   filterType: FilterType;
   label?: string;
   result: string;
   filterParams?: Partial<FilterParams[keyof FilterParams]>;
+  active?: boolean;
+  [key: string]: // 添加索引签名，允许任意额外的字符串属性
+  | FilterType
+    | string
+    | boolean
+    | Partial<FilterParams[keyof FilterParams]>
+    | undefined
+    | any;
 };

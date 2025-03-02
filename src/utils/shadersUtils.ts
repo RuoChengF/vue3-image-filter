@@ -23,6 +23,7 @@ export const createNaturalFilter = (
     temperature: 0.05, // 色温
     gamma: 1.05, // 伽马值
   };
+
   return new PIXI.Filter("", naturalShader, {
     ...defaultParams,
     ...filterParams,
@@ -129,9 +130,50 @@ export const createMosaicFilter = (
   const defaultParams = {
     uTileSize: { x: 10, y: 10 }, // 像素块大小
   };
+  const autoFilterParams = {
+    uTileSize: {
+      x: filterParams?.uTileSizeX ?? filterParams.uTileSize.x,
+      y: filterParams?.uTileSizeY ?? filterParams.uTileSize.y,
+    }, // 像素块大小
+  };
   return new PIXI.Filter("", mosaicShader, {
     uResolution: { x: sprite.width, y: sprite.height }, // 应该是你的画布分辨率
     ...defaultParams,
-    ...filterParams,
+    ...autoFilterParams,
   });
+};
+
+// 定义滤镜参数的取值范围和步长
+export const filterParamsRange = {
+  natural: {
+    brightness: { min: 0.5, max: 2.0, step: 0.05, label: "亮度" },
+    saturation: { min: 0.0, max: 2.0, step: 0.05, label: "饱和度" },
+    contrast: { min: 0.5, max: 2.0, step: 0.05, label: "对比度" },
+    temperature: { min: -0.5, max: 0.5, step: 0.05, label: "色温" },
+    gamma: { min: 0.5, max: 2.0, step: 0.05, label: "伽马值" },
+  },
+  defogging: {
+    fogAmount: { min: 0.0, max: 1.0, step: 0.1, label: "去雾强度" },
+  },
+  sharpen: {
+    strength: { min: 0.0, max: 1.0, step: 0.1, label: "锐化强度" },
+  },
+  vintage: {
+    sepia: { min: 0.0, max: 1.0, step: 0.1, label: "复古程度" },
+    noise: { min: 0.0, max: 1.0, step: 0.1, label: "噪点" },
+    scratch: { min: 0.0, max: 1.0, step: 0.1, label: "划痕" },
+  },
+  colorSplit: {
+    offset: {
+      min: 0.0,
+      max: 10.0,
+      step: 1.0,
+      label: "偏移量",
+    },
+    angle: { min: 0.0, max: 360.0, step: 15.0, label: "角度" },
+  },
+  mosaic: {
+    uTileSizeX: { min: 1, max: 50, step: 1, label: "横向像素块大小" },
+    uTileSizeY: { min: 1, max: 50, step: 1, label: "纵向像素块大小" },
+  },
 };

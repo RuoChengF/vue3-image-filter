@@ -34,12 +34,18 @@ export class PixiFilter {
   /**
    * 加载图片并创建精灵
    * @param imageSource - 图片源（URL或Base64）
+   * @param forceUpdate - 是否强制更新图片，默认为true。设置为false时，如果已有图片则不会重新加载
    */
-  public async loadImage(imageSource: string): Promise<void> {
+  public async loadImage(imageSource: string, forceUpdate: boolean = true): Promise<void> {
     if (this.isDestroyed) {
       throw new Error("PixiFilter instance has been destroyed");
     }
     try {
+      // 如果forceUpdate为false且已有sprite，则不重新加载图片
+      if (!forceUpdate && this.sprite) {
+        return;
+      }
+      
       if (this.sprite) {
         this.app.stage.removeChild(this.sprite);
         this.sprite.destroy();
@@ -80,36 +86,11 @@ export class PixiFilter {
     }
 
     // 应用滤镜
-    // if (filterType === "mosaic") {
-    //   // 类型断言确保 TypeScript 知道这是 mosaic 滤镜创建函数
-    //   this.currentFilter = (
-    //     filterCreator as (options: {
-    //       width: number;
-    //       height: number;
-    //       filterParams?: any;
-    //     }) => PIXI.Filter
-    //   )({
-    //     width: this.sprite.width,
-    //     height: this.sprite.height,
-    //     filterParams:normalizedFilterData?.filterParams ?? null
-    //   });
-    // } else if (filterType === "gaussian") {
-    //   // 类型断言确保 TypeScript 知道这是 gaussian 滤镜创建函数
-    //   this.currentFilter = (
-    //     filterCreator as (sprite: PIXI.Sprite) => PIXI.Filter
-    //   )(this.sprite);
-    // } else {
       // 创建基础滤镜并应用自定义参数
       this.currentFilter = (filterCreator as ( sprite: PIXI.Sprite, filterParams) => PIXI.Filter)(
         this.sprite,
         normalizedFilterData?.filterParams ?? null,
       );
-    //   // 如果用户传入了自定义参数，则应用这些参数
-    //   if (normalizedFilterData.filterParams) {
-    //     Object.assign(this.currentFilter.uniforms, normalizedFilterData.filterParams);
-    //   }
-    // }
-
     // 只有当滤镜存在时才应用滤镜，否则保持原图
     if (this.currentFilter) {
       this.sprite.filters = [this.currentFilter];
@@ -151,6 +132,8 @@ export class PixiFilter {
       filterType: data.filterType,
       label: data.label,
       result: canvas.toDataURL("image/png"),
+      active:false,
+      filterParams:data.filterParams
     };
     return params;
   }

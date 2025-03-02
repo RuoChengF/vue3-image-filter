@@ -22,7 +22,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onBeforeUnmount } from "vue";
+import { ref, onMounted, onBeforeUnmount, toRefs } from "vue";
 import { PixiFilter } from "@/core/PixiFilter";
 import { BatchFilterData, FilterType } from "@/utils/types";
 import { ElSelect, ElOption, ElButton } from "element-plus";

@@ -318,7 +318,7 @@ type FilterType =
   label: "黑白效果",
   result: "",
   filterParams: {
-    intensity: 1.0  // 灰度强度，范围：0.0-1.0，默认：1.0
+    // intensity: 1.0  // 灰度强度，范围：0.0-1.0，默认：1.0 暂未开放
   }
 }
 ```
@@ -331,7 +331,7 @@ type FilterType =
   label: "反色效果",
   result: "",
   filterParams: {
-    intensity: 1.0  // 反色强度，范围：0.0-1.0，默认：1.0
+   //  intensity: 1.0  // 反色强度，范围：0.0-1.0，默认：1.0 暂未开放
   }
 }
 ```

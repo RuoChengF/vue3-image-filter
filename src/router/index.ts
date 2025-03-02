@@ -10,6 +10,11 @@ const router = createRouter({
       component: ImageFilter,
     },
     {
+      path: "/index",
+      name: "index",
+      component: () => import("@/views/index.vue"),
+    },
+    {
       path: "/single",
       name: "single",
       component: () => import("@/views/SingleFilter.vue"),
