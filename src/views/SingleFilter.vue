@@ -1,7 +1,8 @@
 <template>
   <div class="single-filter">
     <div class="upload-area">
-      <input type="file" @change="handleImageUpload" accept="image/*" />
+      <!-- <input type="file" @change="handleImageUpload" accept="image/*" /> -->
+      <singleUploadImg @handleGetEmits="handleGetEmits" />
     </div>
     <div class="filter-controls" v-if="currentImage">
       <el-select v-model="currentFilter" placeholder="选择滤镜效果">
@@ -22,6 +23,8 @@
 </template>
 
 <script setup lang="ts">
+import singleUploadImg from "@/components/Upload/singleUploadImg.vue";
+
 import { ref, onMounted, onBeforeUnmount, toRefs } from "vue";
 import { PixiFilter } from "@/core/PixiFilter";
 import { BatchFilterData, FilterType } from "@/utils/types";
@@ -51,16 +54,11 @@ onMounted(() => {
   });
 });
 
-const handleImageUpload = async (event: Event) => {
-  const file = (event.target as HTMLInputElement).files?.[0];
-  if (file && filter) {
-    const reader = new FileReader();
-    reader.onload = async (e) => {
-      currentImage.value = e.target?.result as string;
-      await filter?.loadImage(currentImage.value);
-      applyFilter();
-    };
-    reader.readAsDataURL(file);
+const handleGetEmits = async (data: any) => {
+  if (filter) {
+    currentImage.value = data as string;
+    await filter?.loadImage(currentImage.value);
+    applyFilter();
   }
 };
 

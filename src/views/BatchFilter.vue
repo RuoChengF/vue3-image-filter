@@ -1,7 +1,7 @@
 <template>
   <div class="batch-filter">
     <div class="upload-area">
-      <input type="file" @change="handleImageUpload" accept="image/*" />
+      <singleUploadImg @handleGetEmits="handleGetEmits" />
     </div>
     <div class="filter-gallery" v-if="processedImages.length > 0">
       <div
@@ -17,9 +17,11 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onBeforeUnmount } from 'vue';
-import { PixiFilter } from '@/core/PixiFilter';
-import { BatchFilterData } from '@/utils/types';
+import singleUploadImg from "@/components/Upload/singleUploadImg.vue";
+
+import { ref, onMounted, onBeforeUnmount } from "vue";
+import { PixiFilter } from "@/core/PixiFilter";
+import { BatchFilterData } from "@/utils/types";
 
 const processedImages = ref<BatchFilterData[]>([]);
 let filter: PixiFilter | null = null;
@@ -34,29 +36,24 @@ onMounted(() => {
 
 // 定义滤镜列表
 const filterList: BatchFilterData[] = [
-  { filterType: 'natural', label: '自然效果', result: '' },
-  { filterType: 'grayscale', label: '黑白效果', result: '' },
-  { filterType: 'vintage', label: '老照片效果', result: '' },
-  { filterType: 'invert', label: '反色效果', result: '' },
-  { filterType: 'defogging', label: '去雾效果', result: '' },
-  { filterType: 'sharpen', label: '锐化效果', result: '' },
-  { filterType: 'mosaic', label: '马赛克效果', result: '' },
-  { filterType: 'gaussian', label: '高斯模糊效果', result: '' },
-  { filterType: 'colorSplit', label: '颜色分离效果', result: '' },
+  { filterType: "natural", label: "自然效果", result: "" },
+  { filterType: "grayscale", label: "黑白效果", result: "" },
+  { filterType: "vintage", label: "老照片效果", result: "" },
+  { filterType: "invert", label: "反色效果", result: "" },
+  { filterType: "defogging", label: "去雾效果", result: "" },
+  { filterType: "sharpen", label: "锐化效果", result: "" },
+  { filterType: "mosaic", label: "马赛克效果", result: "" },
+  { filterType: "gaussian", label: "高斯模糊效果", result: "" },
+  { filterType: "colorSplit", label: "颜色分离效果", result: "" },
 ];
 
 // 处理图片上传
-const handleImageUpload = async (event: Event) => {
-  const file = (event.target as HTMLInputElement).files?.[0];
-  if (file && filter) {
-    const reader = new FileReader();
-    reader.onload = async (e) => {
-      const base64 = e.target?.result as string;
-      await filter.loadImage(base64);
-      // 批量应用所有滤镜
-      processedImages.value = filter.applyFilters(filterList);
-    };
-    reader.readAsDataURL(file);
+const handleGetEmits = async (data: any) => {
+  if (filter) {
+    const base64 = data as string;
+    await filter.loadImage(base64);
+    // 批量应用所有滤镜
+    processedImages.value = filter.applyFilters(filterList);
   }
 };
 

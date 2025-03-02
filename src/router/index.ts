@@ -1,13 +1,11 @@
 import { createRouter, createWebHistory } from "vue-router";
-import ImageFilter from "@/components/ImageFilter.vue";
 
 const router = createRouter({
   history: createWebHistory(),
   routes: [
     {
       path: "/",
-      name: "home",
-      component: ImageFilter,
+      redirect: "/index"
     },
     {
       path: "/index",

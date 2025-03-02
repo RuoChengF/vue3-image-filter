@@ -1,4 +1,8 @@
 <template>
+  <div class="container">
+    <singleUploadImg @handleGetEmits="handleGetEmits" />
+  </div>
+
   <div class="sidebar">
     <el-card
       v-for="(item, index) in processedImages"
@@ -21,8 +25,10 @@
 import { PixiFilter } from "@/core/PixiFilter";
 import { BatchFilterData } from "@/utils/types";
 import { filterList } from "@/constants/other/ShowFilterOption";
+import singleUploadImg from "./Upload/singleUploadImg.vue";
 import img1 from "@/assets/02.jpg";
 import { onMounted, ref } from "vue";
+const setPrivewImg = ref<string>(img1);
 const processedImages = ref<BatchFilterData[]>([]);
 let filter: PixiFilter | null = null;
 // 当前选中的滤镜参数
@@ -38,9 +44,24 @@ const handleSelect = (item: BatchFilterData) => {
   item["active"] = true;
   const params = {
     ...item,
-    originalImage: img1,
+    originalImage: setPrivewImg.value,
   };
   emits("selectFilter", params);
+};
+const handleGetEmits = (data: string) => {
+  setPrivewImg.value = data;
+
+  setTimeout(async () => {
+    await filter.loadImage(setPrivewImg.value);
+    // 批量应用所有滤镜
+    processedImages.value = filter.applyFilters(filterList);
+    processedImages.value[0].active = true;
+    const params = {
+      ...processedImages.value[0],
+      originalImage: setPrivewImg.value,
+    };
+    emits("selectFilter", params);
+  }, 100);
 };
 // 初始化滤镜实例
 onMounted(async () => {
@@ -55,17 +76,21 @@ onMounted(async () => {
   processedImages.value[0].active = true;
   const params = {
     ...processedImages.value[0],
-    originalImage: img1,
+    originalImage: setPrivewImg.value,
   };
   emits("selectFilter", params);
 });
 </script>
 <style lang="scss" scoped>
+.container {
+  padding: 10px 0;
+}
 .sidebar {
   display: flex;
-  justify-content: center;
+  //   justify-content: center;
   flex-wrap: wrap;
   gap: 10px;
+
   :deep(.el-card__body) {
     padding: 0;
   }

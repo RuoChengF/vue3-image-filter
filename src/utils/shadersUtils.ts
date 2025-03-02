@@ -132,8 +132,8 @@ export const createMosaicFilter = (
   };
   const autoFilterParams = {
     uTileSize: {
-      x: filterParams?.uTileSizeX ?? filterParams.uTileSize.x,
-      y: filterParams?.uTileSizeY ?? filterParams.uTileSize.y,
+      x: filterParams?.uTileSizeX ?? 10,
+      y: filterParams?.uTileSizeY ?? 10,
     }, // 像素块大小
   };
   return new PIXI.Filter("", mosaicShader, {
@@ -176,4 +176,34 @@ export const filterParamsRange = {
     uTileSizeX: { min: 1, max: 50, step: 1, label: "横向像素块大小" },
     uTileSizeY: { min: 1, max: 50, step: 1, label: "纵向像素块大小" },
   },
+};
+
+/**
+ * 将File对象转换为base64格式的字符串
+ * @param {File} file - 要转换的文件对象
+ * @returns {Promise<string>} 返回一个Promise，解析为base64格式的字符串
+ *
+ * @example
+ * // 从文件输入元素获取文件并转换为base64
+ * const fileInput = document.getElementById('fileInput') as HTMLInputElement;
+ * const file = fileInput.files[0];
+ * fileToBase64(file)
+ *   .then(base64String => {
+ *     console.log('转换后的base64字符串:', base64String);
+ *     // 可以将base64字符串用于图片src或其他用途
+ *     const imgElement = document.createElement('img');
+ *     imgElement.src = base64String;
+ *     document.body.appendChild(imgElement);
+ *   })
+ *   .catch(error => {
+ *     console.error('转换失败:', error);
+ *   });
+ */
+export const fileToBase64 = (file: File): Promise<string> => {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result as string);
+    reader.onerror = (error) => reject(error);
+  });
 };

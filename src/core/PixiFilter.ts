@@ -45,7 +45,7 @@ export class PixiFilter {
       if (!forceUpdate && this.sprite) {
         return;
       }
-      
+
       if (this.sprite) {
         this.app.stage.removeChild(this.sprite);
         this.sprite.destroy();
@@ -133,7 +133,7 @@ export class PixiFilter {
       label: data.label,
       result: canvas.toDataURL("image/png"),
       active:false,
-      filterParams:data.filterParams
+      filterParams:data?.filterParams??null,
     };
     return params;
   }

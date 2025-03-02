@@ -1,8 +1,36 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, onMounted, watch } from "vue";
 import { ElMenu, ElMenuItem } from "element-plus";
 import Logo from "@/assets/02.jpg";
-const activeIndex = ref("1");
+import { useRoute } from "vue-router";
+
+const route = useRoute();
+
+// 根据路由路径设置菜单索引
+const getActiveIndex = (path: string): string => {
+  switch (path) {
+    case "/index":
+      return "1";
+    case "/single":
+      return "2";
+    case "/batch":
+      return "3";
+    default:
+      return "1";
+  }
+};
+
+// 初始化activeIndex为当前路由对应的菜单索引
+const activeIndex = ref(getActiveIndex(route.path));
+
+// 监听路由变化，更新菜单选中状态
+watch(
+  () => route.path,
+  (newPath) => {
+    activeIndex.value = getActiveIndex(newPath);
+  }
+);
+
 const handleSelect = (key: string, keyPath: string[]) => {
   console.log(key, keyPath);
 };

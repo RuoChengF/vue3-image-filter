@@ -8,6 +8,7 @@
       "noEmit": true,
       "experimentalDecorators": true,
       "downlevelIteration": true,
+      "types": ["vue-router"],
       // "allowImportingTsExtensions": true,
       "paths": {
         "@/*": ["./src/*"],
@@ -15,7 +16,8 @@
         "@/hooks/element/*": ["src/hooks/data/*"],
         "@/store/helpers/*": ["./src/store/helpers/*"],
         "@/components/*": ["./src/components/*"],
-        "@/hooks/*": ["./src/hooks/*"]
+        "@/hooks/*": ["./src/hooks/*"],
+        "vue-router": ["./node_modules/vue-router"]
       }
     },
     "include": ["*", "src/**/*.ts", "src/**/*.js", "src/**/*.vue", "src/**/*.tsx", "src/**/*.d.ts", "src/models/*.ts"],
