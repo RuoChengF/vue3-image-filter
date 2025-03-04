@@ -36,7 +36,10 @@ export class PixiFilter {
    * @param imageSource - 图片源（URL或Base64）
    * @param forceUpdate - 是否强制更新图片，默认为true。设置为false时，如果已有图片则不会重新加载
    */
-  public async loadImage(imageSource: string, forceUpdate: boolean = true): Promise<void> {
+  public async loadImage(
+    imageSource: string,
+    forceUpdate: boolean = true
+  ): Promise<void> {
     if (this.isDestroyed) {
       throw new Error("PixiFilter instance has been destroyed");
     }
@@ -76,8 +79,8 @@ export class PixiFilter {
     }
 
     // 处理直接传入FilterType的情况
-    const filterType =  filterData.filterType;
-    const normalizedFilterData =  filterData;
+    const filterType = filterData.filterType;
+    const normalizedFilterData = filterData;
 
     // 创建新滤镜
     const filterCreator = this.getFilterCreator(filterType);
@@ -85,17 +88,25 @@ export class PixiFilter {
       throw new Error(`Unsupported filter type: ${filterType}`);
     }
 
-    // 应用滤镜
+    // 检查是否应用滤镜，默认为true
+    const shouldApplyFilter = normalizedFilterData?.applyFilter ?? true;
+
+    if (shouldApplyFilter) {
+      // 应用滤镜
       // 创建基础滤镜并应用自定义参数
-      this.currentFilter = (filterCreator as ( sprite: PIXI.Sprite, filterParams) => PIXI.Filter)(
-        this.sprite,
-        normalizedFilterData?.filterParams ?? null,
-      );
-    // 只有当滤镜存在时才应用滤镜，否则保持原图
-    if (this.currentFilter) {
-      this.sprite.filters = [this.currentFilter];
+      this.currentFilter = (
+        filterCreator as (sprite: PIXI.Sprite, filterParams) => PIXI.Filter
+      )(this.sprite, normalizedFilterData?.filterParams ?? null);
+      // 只有当滤镜存在时才应用滤镜，否则保持原图
+      if (this.currentFilter) {
+        this.sprite.filters = [this.currentFilter];
+      } else {
+        this.sprite.filters = [];
+      }
     } else {
+      // 不应用滤镜，保持原图
       this.sprite.filters = [];
+      this.currentFilter = null;
     }
 
     // 渲染并返回结果
@@ -107,16 +118,12 @@ export class PixiFilter {
    * @param filterDataArray - 滤镜数据数组，每个元素包含滤镜类型和标签
    * @returns 处理后的数据数组，每个元素包含滤镜类型和处理结果
    */
-  public applyFilters(
-    filterDataArray: BatchFilterData[]
-  ): BatchFilterData[] {
+  public applyFilters(filterDataArray: BatchFilterData[]): BatchFilterData[] {
     if (!this.sprite) {
       throw new Error("No image loaded");
     }
 
-    return filterDataArray.map((filterData) =>
-      this.applyFilter(filterData)
-    );
+    return filterDataArray.map((filterData) => this.applyFilter(filterData));
   }
 
   /**
@@ -132,8 +139,9 @@ export class PixiFilter {
       filterType: data.filterType,
       label: data.label,
       result: canvas.toDataURL("image/png"),
-      active:false,
-      filterParams:data?.filterParams??null,
+      active: false,
+      filterParams: data?.filterParams ?? null,
+      applyFilter: data?.applyFilter ?? true,
     };
     return params;
   }

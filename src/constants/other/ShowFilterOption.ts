@@ -3,6 +3,14 @@ import { BatchFilterData } from "@/utils/types";
 // 定义滤镜列表
 export const filterList: BatchFilterData[] = [
   {
+    filterType: "grayscale",
+    label: "黑白效果",
+    result: "",
+    filterParams: {},
+    applyFilter: false,
+  },
+
+  {
     filterType: "natural",
     label: "自然效果",
     result: "",

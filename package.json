@@ -1,6 +1,6 @@
 {
     "name": "vue3-image-filter",
-    "version": "1.6.4",
+    "version": "1.7.1",
     "description": "对于图片处理的插件，支持vue3 和 vue2，支持图片的滤镜处理",
     "type": "module",
     "main": "dist/index.cjs",

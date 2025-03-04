@@ -113,7 +113,9 @@ const filterList = [
   { filterType: "sharpen", label: "锐化效果", result: "" },
   { filterType: "mosaic", label: "马赛克效果", result: "" },
   { filterType: "gaussian", label: "高斯模糊效果", result: "" },
-  { filterType: "colorSplit", label: "颜色分离效果", result: "" }
+  { filterType: "colorSplit", label: "颜色分离效果", result: "" },
+  // 使用applyFilter参数返回原图（不应用滤镜）
+  { filterType: "natural", label: "原图", result: "", applyFilter: false }
 ];
 
 const handleImageUpload = async (event) => {
@@ -247,6 +249,7 @@ interface BatchFilterData {
   label: string;           // 滤镜标签
   result: string;          // 处理结果（Base64图片数据）
   filterParams?: any;      // 可选的滤镜参数
+  applyFilter?: boolean;   // 是否应用滤镜，默认为true，设置为false时返回原图
 }
 ```
 
