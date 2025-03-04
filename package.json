@@ -15,7 +15,8 @@
         "build": "vue-tsc -b && vite build",
         "preview": "vite preview",
         "build:lib": "rollup -c",
-        "prepublishOnly": "npm run build:lib"
+        "prepublishOnly": "npm run build:lib",
+        "publish": "bash ./publish.sh"
     },
     "keywords": [
         "pixi.js",
