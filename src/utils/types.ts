@@ -43,6 +43,27 @@ export interface FilterParams {
     uTileSizeX: number;
     uTileSizeY: number;
   };
+  blurFilter: {
+    blur: number;
+  };
+  brightness: {
+    brightness: number;
+  };
+  contrast: {
+    contrast: number;
+  };
+  grayscaleAdjust: {
+    grayIntensity: number;
+  };
+  invertAdjust: {
+    invertIntensity: number;
+  };
+  saturation: {
+    saturation: number;
+  };
+  customSepia: {
+    sepiaIntensity: number;
+  };
 }
 
 // 滤镜创建函数类型
@@ -73,6 +94,34 @@ export type FilterCreator = {
   colorSplit: (
     sprite: PIXI.Sprite,
     filterParams?: FilterParams["colorSplit"]
+  ) => PIXI.Filter;
+  blurFilter: (
+    sprite: PIXI.Sprite,
+    filterParams?: FilterParams["blurFilter"]
+  ) => PIXI.Filter;
+  brightness: (
+    sprite: PIXI.Sprite,
+    filterParams?: FilterParams["brightness"]
+  ) => PIXI.Filter;
+  contrast: (
+    sprite: PIXI.Sprite,
+    filterParams?: FilterParams["contrast"]
+  ) => PIXI.Filter;
+  grayscaleAdjust: (
+    sprite: PIXI.Sprite,
+    filterParams?: FilterParams["grayscaleAdjust"]
+  ) => PIXI.Filter;
+  invertAdjust: (
+    sprite: PIXI.Sprite,
+    filterParams?: FilterParams["invertAdjust"]
+  ) => PIXI.Filter;
+  saturation: (
+    sprite: PIXI.Sprite,
+    filterParams?: FilterParams["saturation"]
+  ) => PIXI.Filter;
+  customSepia: (
+    sprite: PIXI.Sprite,
+    filterParams?: FilterParams["customSepia"]
   ) => PIXI.Filter;
 };
 

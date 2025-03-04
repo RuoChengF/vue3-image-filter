@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted, watch } from "vue";
 import { ElMenu, ElMenuItem } from "element-plus";
-import Logo from "@/assets/02.jpg";
+import Logo from "@/assets/logo.png";
 import { useRoute } from "vue-router";
 
 const route = useRoute();
@@ -46,7 +46,9 @@ const handleSelect = (key: string, keyPath: string[]) => {
       @select="handleSelect"
     >
       <el-menu-item index="0">
-        <el-image style="width: 100px; height: 50px" :src="Logo" fit="auto" />
+        <router-link to="/index" class="nav-item">
+          <el-image style="width: 150px; height: 60px" :src="Logo" fit="fill" />
+        </router-link>
       </el-menu-item>
       <el-menu-item index="1">
         <router-link to="/index" class="nav-item">总体演示</router-link>
@@ -67,6 +69,7 @@ const handleSelect = (key: string, keyPath: string[]) => {
 .app-container {
   width: 100%;
   height: 100%;
+  overflow: hidden;
   background-color: #f0f0f0;
 
   .el-menu {

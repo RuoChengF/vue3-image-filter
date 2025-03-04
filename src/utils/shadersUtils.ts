@@ -8,6 +8,12 @@ import vintageShader from "../constants/shaders/basic/vintage.frag"; // 创建�
 // import gaussianBlurShader from "../constants/shaders/basic/gaussianblur.frag"; // 创建高斯模糊滤镜
 import colorSplitShader from "../constants/shaders/basic/color-split.frag"; //色调分离
 import mosaicShader from "../constants/shaders/basic/mosaic.frag"; // 创建马赛克效果滤镜
+import brightnessShader from "../constants/shaders/basic/brightness.frag"; // 导入亮度调整着色器
+import contrastShader from "../constants/shaders/basic/contrast.frag"; // 导入对比度调整着色器
+import grayscaleAdjustShader from "../constants/shaders/basic/grayscale-adjust.frag"; // 导入灰度
+import invertAdjustShader from "../constants/shaders/basic/invert-adjust.frag"; // 导入反相调整着色器
+import colorAdjust from "../constants/shaders/basic/colorAdjust.frag"; // 导入饱和度调整着色器
+import sepiaCustomShader from "../constants/shaders/basic/sepia-custom.frag"; // 导入自定义褐色着色器
 import * as PIXI from "pixi.js";
 import { TiltShiftFilter } from "pixi-filters";
 
@@ -143,6 +149,121 @@ export const createMosaicFilter = (
   });
 };
 
+// 定义模糊滤镜
+export const createBlurFilter = (
+  sprite: PIXI.Sprite,
+  filterParams
+): PIXI.Filter => {
+  const defaultParams = {
+    blur: filterParams?.blur ?? 0, // 模糊程度
+  };
+
+  const startPoint = new PIXI.Point(0, 0);
+  const endPoint = new PIXI.Point(sprite.width, sprite.height);
+  return new TiltShiftFilter(defaultParams.blur, 0, startPoint, endPoint);
+};
+
+// 创建亮度调整滤镜
+export const createBrightnessFilter = (
+  sprite: PIXI.Sprite,
+  filterParams
+): PIXI.Filter => {
+  const defaultParams = {
+    brightness: 1.0, // 默认亮度值，1.0表示原始亮度
+  };
+  return new PIXI.Filter("", brightnessShader, {
+    ...defaultParams,
+    ...filterParams,
+  });
+};
+
+// 创建对比度调整滤镜
+export const createContrastFilter = (
+  sprite: PIXI.Sprite,
+  filterParams
+): PIXI.Filter => {
+  const defaultParams = {
+    contrast: 1.0, // 默认对比度值，1.0表示原始对比度
+  };
+  return new PIXI.Filter("", contrastShader, {
+    ...defaultParams,
+    ...filterParams,
+  });
+};
+
+// 创建灰度调整滤镜
+export const createGrayscaleAdjustFilter = (
+  sprite: PIXI.Sprite,
+  filterParams
+): PIXI.Filter => {
+  const defaultParams = {
+    grayIntensity: 1.0, // 默认灰度强度，1.0表示完全灰度
+  };
+  return new PIXI.Filter("", grayscaleAdjustShader, {
+    ...defaultParams,
+    ...filterParams,
+  });
+};
+
+// 创建反相调整滤镜
+export const createInvertAdjustFilter = (
+  sprite: PIXI.Sprite,
+  filterParams
+): PIXI.Filter => {
+  const defaultParams = {
+    invertIntensity: 1.0, // 默认反相强度，1.0表示完全反相
+  };
+  return new PIXI.Filter("", invertAdjustShader, {
+    ...defaultParams,
+    ...filterParams,
+  });
+};
+
+// 创建饱和度调整滤镜
+export const createSaturationFilter = (
+  sprite: PIXI.Sprite,
+  filterParams
+): PIXI.Filter => {
+  const defaultParams = {
+    saturation: 1.0, // 默认饱和度值，1.0表示原始饱和度
+    ...filterParams,
+  };
+  // 创建颜色矩阵滤镜
+  const colorMatrix = new PIXI.ColorMatrixFilter();
+  // 应用饱和度调整并返回滤镜实例
+  colorMatrix.saturate(defaultParams.saturation);
+  return colorMatrix;
+};
+
+// 创建自定义褐色调整滤镜
+export const createCustomSepiaFilter = (
+  sprite: PIXI.Sprite,
+  filterParams
+): PIXI.Filter => {
+  const defaultParams = {
+    sepiaIntensity: 1.0, // 默认褐色强度，1.0表示完全褐色效果
+  };
+  return new PIXI.Filter("", sepiaCustomShader, {
+    ...defaultParams,
+    ...filterParams,
+  });
+};
+// 创建褐色调整滤镜
+// export const createSepiaFilter = (
+//   sprite: PIXI.Sprite,
+//   filterParams
+// ): PIXI.Filter => {
+//   const defaultParams = {
+//     sepia: 1.0, // 默认褐色强度，1.0表示完全褐色效果
+//     ...filterParams,
+//   };
+//   // 创建颜色矩阵滤镜
+//   const colorMatrix = new PIXI.ColorMatrixFilter();
+//   // 应用褐色调整并返回滤镜实例
+//   colorMatrix.sepia(defaultParams.sepia);
+//   return colorMatrix;
+// };
+
 // 定义滤镜参数的取值范围和步长
 export const filterParamsRange = {
   natural: {
@@ -175,6 +296,27 @@ export const filterParamsRange = {
   mosaic: {
     uTileSizeX: { min: 1, max: 50, step: 1, label: "横向像素块大小" },
     uTileSizeY: { min: 1, max: 50, step: 1, label: "纵向像素块大小" },
+  },
+  blurFilter: {
+    blur: { min: 0.0, max: 100.0, step: 0.1, label: "模糊程度" },
+  },
+  brightness: {
+    brightness: { min: 0.0, max: 5.0, step: 0.1, label: "亮度" },
+  },
+  contrast: {
+    contrast: { min: 0.0, max: 5.0, step: 0.1, label: "对比度" },
+  },
+  grayscaleAdjust: {
+    grayIntensity: { min: 0.0, max: 1.0, step: 0.05, label: "灰度强度" },
+  },
+  invertAdjust: {
+    invertIntensity: { min: 0.0, max: 1.0, step: 0.05, label: "反相强度" },
+  },
+  saturation: {
+    saturation: { min: 0.0, max: 3.0, step: 0.1, label: "饱和度" },
+  },
+  customSepia: {
+    sepiaIntensity: { min: 0.0, max: 1.2, step: 0.05, label: "自定义褐色强度" },
   },
 };
 

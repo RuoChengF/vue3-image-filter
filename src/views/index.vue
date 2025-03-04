@@ -44,7 +44,7 @@ aside {
 }
 .el-container {
   background: #fff;
-  height: 100%;
+  height: calc(100vh - 60px);
 }
 </style>
 <style lang="scss" scoped>

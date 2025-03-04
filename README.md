@@ -2,6 +2,43 @@
 
 一个基于PixiJS的图片滤镜处理插件，支持Vue3和Vue2，提供多种图片滤镜效果处理功能。
 
+## 滤镜参数表
+
+以下是本项目支持的所有滤镜效果及其参数配置：
+
+### 基础滤镜
+
+| 滤镜名称 | 参数 | 默认值 | 取值范围 | 步长 | 说明 |
+| --- | --- | --- | --- | --- | --- |
+| 自然效果 (natural) | brightness | 1.05 | 0.5-2.0 | 0.05 | 亮度 |
+|  | saturation | 1.05 | 0.0-2.0 | 0.05 | 饱和度 |
+|  | contrast | 1.05 | 0.5-2.0 | 0.05 | 对比度 |
+|  | temperature | 0.05 | -0.5-0.5 | 0.05 | 色温 |
+|  | gamma | 1.05 | 0.5-2.0 | 0.05 | 伽马值 |
+| 去雾效果 (defogging) | fogAmount | 0.8 | 0.0-1.0 | 0.1 | 去雾强度 |
+| 锐化效果 (sharpen) | strength | 0.5 | 0.0-1.0 | 0.1 | 锐化强度 |
+| 黑白效果 (grayscale) | - | - | - | - | 无参数 |
+| 反色效果 (invert) | - | - | - | - | 无参数 |
+| 老照片效果 (vintage) | sepia | 0.8 | 0.0-1.0 | 0.1 | 复古程度 |
+|  | noise | 0.2 | 0.0-1.0 | 0.1 | 噪点 |
+|  | scratch | 0.1 | 0.0-1.0 | 0.1 | 划痕 |
+
+### 高级滤镜
+
+| 滤镜名称 | 参数 | 默认值 | 取值范围 | 步长 | 说明 |
+| --- | --- | --- | --- | --- | --- |
+| 色调分离 (colorSplit) | offset | [5.0, 0.0] | 0.0-10.0 | 1.0 | 偏移量 |
+|  | angle | 0.0 | 0.0-360.0 | 15.0 | 角度 |
+| 马赛克效果 (mosaic) | uTileSizeX | 10 | 1-50 | 1 | 横向像素块大小 |
+|  | uTileSizeY | 10 | 1-50 | 1 | 纵向像素块大小 |
+| 模糊效果 (blurFilter) | blur | 0 | 0.0-100.0 | 0.1 | 模糊程度 |
+| 亮度调整 (brightness) | brightness | 1.0 | 0.0-5.0 | 0.1 | 亮度 |
+| 对比度调整 (contrast) | contrast | 1.0 | 0.0-5.0 | 0.1 | 对比度 |
+| 灰度调整 (grayscaleAdjust) | grayIntensity | 1.0 | 0.0-1.0 | 0.05 | 灰度强度 |
+| 反相调整 (invertAdjust) | invertIntensity | 1.0 | 0.0-1.0 | 0.05 | 反相强度 |
+| 饱和度调整 (saturation) | saturation | 1.0 | 0.0-3.0 | 0.1 | 饱和度 |
+| 自定义褐色 (customSepia) | sepiaIntensity | 1.0 | 0.0-1.2 | 0.05 | 自定义褐色强度 |
+
 ## 特性
 
 - 支持多种滤镜效果：自然效果、黑白效果、老照片效果、反色效果等
@@ -257,15 +294,51 @@ interface BatchFilterData {
 
 ```typescript
 type FilterType = 
-  | "natural"     // 自然效果
-  | "defogging"   // 去雾效果
-  | "sharpen"     // 锐化效果
-  | "grayscale"   // 黑白效果
-  | "invert"      // 反色效果
-  | "vintage"     // 老照片效果
-  | "mosaic"      // 马赛克效果
-  | "gaussian"    // 高斯模糊效果
-  | "colorSplit"; // 颜色分离效果
+  | "natural"         // 自然效果
+  | "defogging"       // 去雾效果
+  | "sharpen"         // 锐化效果
+  | "grayscale"       // 黑白效果
+  | "invert"          // 反色效果
+  | "vintage"         // 老照片效果
+  | "mosaic"          // 马赛克效果
+  | "gaussian"        // 高斯模糊效果
+  | "colorSplit"      // 颜色分离效果
+  | "brightness"      // 亮度调整
+  | "contrast"        // 对比度调整
+  | "grayscaleAdjust" // 灰度调整
+  | "invertAdjust"    // 反相调整
+  | "saturation"      // 饱和度调整
+  | "customSepia";    // 自定义褐色
+```
+
+## 导出内容说明
+
+`vue3-image-filter` 主要导出以下内容：
+
+```typescript
+// 主要类
+export { PixiFilter } from "./core/PixiFilter";
+// 类型定义
+export { FilterOptions, BatchFilterData } from "./utils/types";
+// 滤镜参数范围配置
+export { filterParamsRange } from "./utils/shadersUtils";
+```
+
+### filterParamsRange
+
+`filterParamsRange` 是一个用于定义各种滤镜效果参数取值范围的配置对象，可用于构建滤镜参数调节界面。每个滤镜参数都定义了其最小值、最大值、步进值和默认值。
+
+```typescript
+const filterParamsRange = {
+  natural: {
+    brightness: { min: 0.5, max: 2.0, step: 0.05, default: 1.05 },
+    saturation: { min: 0.0, max: 2.0, step: 0.05, default: 1.05 },
+    contrast: { min: 0.5, max: 2.0, step: 0.05, default: 1.05 },
+    temperature: { min: -0.5, max: 0.5, step: 0.05, default: 0.05 },
+    gamma: { min: 0.5, max: 2.0, step: 0.05, default: 1.05 }
+  },
+  // ... 其他滤镜参数范围配置
+};
 ```
 
 ## 滤镜效果参数说明

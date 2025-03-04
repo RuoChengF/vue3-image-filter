@@ -3,11 +3,22 @@ import { BatchFilterData } from "@/utils/types";
 // 定义滤镜列表
 export const filterList: BatchFilterData[] = [
   {
-    filterType: "grayscale",
-    label: "黑白效果",
+    filterType: "blurFilter",
+    label: "无滤镜",
     result: "",
-    filterParams: {},
+    filterParams: {
+      blur: 0.5,
+    },
     applyFilter: false,
+  },
+  {
+    filterType: "blurFilter",
+    label: "模糊滤镜",
+    result: "",
+    filterParams: {
+      blur: 0.5,
+    },
+    applyFilter: true,
   },
 
   {
@@ -72,6 +83,54 @@ export const filterList: BatchFilterData[] = [
     filterParams: {
       offset: [5.0, 0.0], // 水平偏移5个像素
       angle: 0.0, // 初始角度为0度
+    },
+  },
+  {
+    filterType: "brightness",
+    label: "亮度调整",
+    result: "",
+    filterParams: {
+      brightness: 1.05, // 亮度
+    },
+  },
+  {
+    filterType: "contrast",
+    label: "对比度调整",
+    result: "",
+    filterParams: {
+      contrast: 1.0, // 对比度
+    },
+  },
+  {
+    filterType: "grayscaleAdjust",
+    label: "灰度调整",
+    result: "",
+    filterParams: {
+      grayIntensity: 0.0, // 对比度
+    },
+  },
+  {
+    filterType: "invertAdjust",
+    label: "反相调整",
+    result: "",
+    filterParams: {
+      invertIntensity: 0.0, // 对比度
+    },
+  },
+  {
+    filterType: "saturation",
+    label: "饱和度调整",
+    result: "",
+    filterParams: {
+      saturation: 0.0, // 饱和度
+    },
+  },
+  {
+    filterType: "customSepia",
+    label: "褐色效果",
+    result: "",
+    filterParams: {
+      sepiaIntensity: 0.0, // 褐色效果
     },
   },
 ];

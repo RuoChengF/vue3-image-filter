@@ -9,6 +9,13 @@ import {
   createVintageFilter,
   createGaussianBlurFilter,
   createColorSplitFilter,
+  createBlurFilter,
+  createBrightnessFilter,
+  createContrastFilter,
+  createGrayscaleAdjustFilter,
+  createInvertAdjustFilter,
+  createSaturationFilter,
+  createCustomSepiaFilter,
 } from "../utils/shadersUtils";
 import type {
   FilterOptions,
@@ -162,6 +169,13 @@ export class PixiFilter {
       mosaic: createMosaicFilter,
       gaussian: createGaussianBlurFilter,
       colorSplit: createColorSplitFilter,
+      blurFilter: createBlurFilter,
+      brightness: createBrightnessFilter, // 添加亮度滤镜
+      contrast: createContrastFilter, // 添加对比度滤镜
+      grayscaleAdjust: createGrayscaleAdjustFilter, // 添加灰度调整滤镜
+      invertAdjust: createInvertAdjustFilter, // 添加反相调整滤镜
+      saturation: createSaturationFilter, // 添加饱和度调整滤镜
+      customSepia: createCustomSepiaFilter, // 添加棕褐色滤镜
     };
 
     return filterMap[filterType];

@@ -2,24 +2,25 @@
   <div class="container">
     <singleUploadImg @handleGetEmits="handleGetEmits" />
   </div>
-
-  <div class="sidebar">
-    <el-card
-      v-for="(item, index) in processedImages"
-      :style="{ width: '70px' }"
-      shadow="hover"
-      :key="index"
-      :class="item.active ? 'active' : ''"
-      @click="handleSelect(item)"
-    >
-      <el-image
-        :style="{ width: '50px', height: '50px' }"
-        :src="item.result"
-        fit="fill"
-      />
-      <p class="footer">{{ item.label }}</p>
-    </el-card>
-  </div>
+  <el-scrollbar>
+    <div class="sidebar">
+      <el-card
+        v-for="(item, index) in processedImages"
+        :style="{ width: '70px' }"
+        shadow="hover"
+        :key="index"
+        :class="item.active ? 'active' : ''"
+        @click="handleSelect(item)"
+      >
+        <el-image
+          :style="{ width: '50px', height: '50px' }"
+          :src="item.result"
+          fit="fill"
+        />
+        <p class="footer">{{ item.label }}</p>
+      </el-card>
+    </div>
+  </el-scrollbar>
 </template>
 <script setup lang="ts">
 import { PixiFilter } from "@/core/PixiFilter";
@@ -88,6 +89,7 @@ onMounted(async () => {
 .sidebar {
   display: flex;
   //   justify-content: center;
+  width: 200px;
   flex-wrap: wrap;
   gap: 10px;
 
