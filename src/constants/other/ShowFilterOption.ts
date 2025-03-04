@@ -86,6 +86,14 @@ export const filterList: BatchFilterData[] = [
     },
   },
   {
+    filterType: "blurFilter",
+    label: "模糊滤镜",
+    result: "",
+    filterParams: {
+      blur: 0.5,
+    },
+  },
+  {
     filterType: "brightness",
     label: "亮度调整",
     result: "",

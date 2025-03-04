@@ -80,14 +80,15 @@ export class PixiFilter {
       throw new Error("No image loaded");
     }
 
-    // 清除当前滤镜
-    if (this.currentFilter) {
-      this.sprite.filters = [];
-    }
-
     // 处理直接传入FilterType的情况
     const filterType = filterData.filterType;
     const normalizedFilterData = filterData;
+
+    // 处理滤镜叠加
+    const shouldOverlay = normalizedFilterData?.overlay ?? false;
+    if (!shouldOverlay && this.currentFilter) {
+      this.sprite.filters = [];
+    }
 
     // 创建新滤镜
     const filterCreator = this.getFilterCreator(filterType);
@@ -106,7 +107,11 @@ export class PixiFilter {
       )(this.sprite, normalizedFilterData?.filterParams ?? null);
       // 只有当滤镜存在时才应用滤镜，否则保持原图
       if (this.currentFilter) {
-        this.sprite.filters = [this.currentFilter];
+        if (shouldOverlay && this.sprite.filters) {
+          this.sprite.filters.push(this.currentFilter);
+        } else {
+          this.sprite.filters = [this.currentFilter];
+        }
       } else {
         this.sprite.filters = [];
       }
@@ -169,7 +174,7 @@ export class PixiFilter {
       mosaic: createMosaicFilter,
       gaussian: createGaussianBlurFilter,
       colorSplit: createColorSplitFilter,
-      blurFilter: createBlurFilter,
+      blurFilter: createBlurFilter, // 添加模糊滤镜
       brightness: createBrightnessFilter, // 添加亮度滤镜
       contrast: createContrastFilter, // 添加对比度滤镜
       grayscaleAdjust: createGrayscaleAdjustFilter, // 添加灰度调整滤镜

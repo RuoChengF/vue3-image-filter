@@ -287,6 +287,7 @@ interface BatchFilterData {
   result: string;          // 处理结果（Base64图片数据）
   filterParams?: any;      // 可选的滤镜参数
   applyFilter?: boolean;   // 是否应用滤镜，默认为true，设置为false时返回原图
+  overlay?: boolean;       // 是否叠加滤镜效果，默认为false，设置为true时会在原有效果上叠加新的滤镜
 }
 ```
 
@@ -303,6 +304,7 @@ type FilterType =
   | "mosaic"          // 马赛克效果
   | "gaussian"        // 高斯模糊效果
   | "colorSplit"      // 颜色分离效果
+  | "blurFilter"      // 模糊滤镜
   | "brightness"      // 亮度调整
   | "contrast"        // 对比度调整
   | "grayscaleAdjust" // 灰度调整
@@ -480,6 +482,8 @@ const filterParamsRange = {
 4. **图片加载**：支持 URL 和 Base64 格式的图片源，但需注意跨域问题。
 
 5. **滤镜参数**：自定义滤镜参数时，建议在合理范围内调整，过大或过小的值可能导致效果不佳。
+
+6. **滤镜叠加**：使用overlay参数可以实现滤镜效果的叠加，但建议合理搭配滤镜效果，避免过度叠加导致图片失真。
 
 ## 许可证
 
