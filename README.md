@@ -155,6 +155,33 @@ const filterList = [
   { filterType: "natural", label: "原图", result: "", applyFilter: false }
 ];
 
+// 使用带参数的滤镜处理
+const filterParamsList = [
+  {
+    filterType: "blurFilter",
+    label: "模糊滤镜",
+    result: "",
+    active: false,
+    filterParams: { blur: 3.0 },
+    filterRange: { min: 0.0, max: 100.0, step: 0.1, label: "模糊程度" },
+    filterParamsValueKey: "blur",
+    overlay: false
+  },
+  {
+    filterType: "brightness",
+    label: "亮度",
+    result: "",
+    active: false,
+    filterParams: { brightness: 0.5 },
+    filterRange: { min: 0.0, max: 5.0, step: 0.1, label: "亮度" },
+    filterParamsValueKey: "brightness",
+    overlay: false
+  }
+];
+
+// 使用applyFilterWithParams方法应用带参数的滤镜
+const processedWithParams = filter.applyFilterWithParams(filterParamsList);
+
 const handleImageUpload = async (event) => {
   const file = event.target.files[0];
   if (file && filter) {
@@ -268,6 +295,77 @@ applyFilters(filterDataArray: BatchFilterData[]): BatchFilterData[]
 | 参数名 | 类型 | 必填 | 说明 |
 | --- | --- | --- | --- |
 | filterDataArray | BatchFilterData[] | 是 | 滤镜数据数组 |
+
+##### applyFilterWithParams
+
+应用带参数的滤镜效果，支持滤镜参数动态调整和效果叠加。
+
+```typescript
+applyFilterWithParams(filterDataArray: BatchFilterData[]): BatchFilterData
+```
+
+**参数说明：**
+
+| 参数名 | 类型 | 必填 | 说明 |
+| --- | --- | --- | --- |
+| filterDataArray | BatchFilterData[] | 是 | 滤镜数据数组，包含滤镜参数和范围配置 |
+
+**BatchFilterData 扩展参数：**
+
+| 参数名 | 类型 | 必填 | 说明 |
+| --- | --- | --- | --- |
+| filterParams | object | 是 | 滤镜参数对象，如 { blur: 3.0 } |
+| filterRange | object | 是 | 参数范围配置，包含 min、max、step 和 label |
+| filterParamsValueKey | string | 是 | filterParams 中参数的键名 |
+| overlay | boolean | 否 | 是否叠加滤镜效果，默认 false |
+| active | boolean | 否 | 是否启用该滤镜，默认 false |
+
+##### applyFilterWithParams
+
+应用带参数的滤镜效果，支持滤镜叠加。
+
+```typescript
+applyFilterWithParams(filterDataArray: BatchFilterData[]): BatchFilterData[]
+```
+
+**参数说明：**
+
+| 参数名 | 类型 | 必填 | 说明 |
+| --- | --- | --- | --- |
+| filterDataArray | BatchFilterData[] | 是 | 滤镜数据数组，每个元素包含滤镜类型、参数和叠加设置 |
+
+**使用示例：**
+
+```typescript
+// 创建滤镜实例
+const filter = new PixiFilter();
+
+// 加载图片
+await filter.loadImage('image.jpg');
+
+// 定义滤镜配置数组
+const filterConfigs = [
+  {
+    filterType: 'brightness',
+    label: '增加亮度',
+    filterParams: { brightness: 1.2 },
+    overlay: true  // 启用滤镜叠加
+  },
+  {
+    filterType: 'saturation',
+    label: '增加饱和度',
+    filterParams: { saturation: 1.3 },
+    overlay: true  // 在亮度滤镜基础上叠加饱和度滤镜
+  }
+];
+
+// 应用滤镜并获取结果
+const results = filter.applyFilterWithParams(filterConfigs);
+```
+
+**说明：**
+- `overlay`: 设置为true时，新的滤镜效果会叠加在现有滤镜效果上；设置为false时，会替换现有的滤镜效果
+- `filterParams`: 可以根据不同滤镜类型设置对应的参数值，参数范围参考滤镜参数表
 
 ##### destroy
 

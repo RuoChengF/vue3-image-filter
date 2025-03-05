@@ -128,6 +128,38 @@ export class PixiFilter {
    * @param filterDataArray - 滤镜数据数组，每个元素包含滤镜类型和标签
    * @returns 处理后的数据数组，每个元素包含滤镜类型和处理结果
    */
+  public applyFilterWithParams(filterDataArray: BatchFilterData[]): BatchFilterData {
+    if (!this.sprite) {
+      throw new Error("No image loaded");
+    }
+
+    // 清空现有滤镜
+    this.sprite.filters = [];
+
+    // 依次应用每个滤镜，并将其添加到滤镜数组中
+    filterDataArray.forEach((filterData) => {
+      const filterType = filterData.filterType;
+      const filterCreator = this.getFilterCreator(filterType);
+
+      if (!filterCreator) {
+        throw new Error(`Unsupported filter type: ${filterType}`);
+      }
+
+      // 创建滤镜并应用参数
+      const filter = (filterCreator as (sprite: PIXI.Sprite, filterParams) => PIXI.Filter)(
+        this.sprite,
+        filterData.filterParams ?? null
+      );
+
+      // 将新滤镜添加到滤镜数组中
+      this.sprite.filters = [...(this.sprite.filters || []), filter];
+    });
+
+    // 使用最后一个滤镜数据作为返回数据的基础，但结果包含所有滤镜的叠加效果
+    const lastFilterData = filterDataArray[filterDataArray.length - 1];
+    return this.getProcessedImageData(lastFilterData);
+  }
+
   public applyFilters(filterDataArray: BatchFilterData[]): BatchFilterData[] {
     if (!this.sprite) {
       throw new Error("No image loaded");
