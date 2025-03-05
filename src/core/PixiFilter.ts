@@ -92,6 +92,7 @@ export class PixiFilter {
 
     // 创建新滤镜
     const filterCreator = this.getFilterCreator(filterType);
+
     if (!filterCreator) {
       throw new Error(`Unsupported filter type: ${filterType}`);
     }
@@ -106,6 +107,7 @@ export class PixiFilter {
         filterCreator as (sprite: PIXI.Sprite, filterParams) => PIXI.Filter
       )(this.sprite, normalizedFilterData?.filterParams ?? null);
       // 只有当滤镜存在时才应用滤镜，否则保持原图
+
       if (this.currentFilter) {
         this.sprite.filters = [this.currentFilter];
       } else {
