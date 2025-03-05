@@ -250,9 +250,10 @@ applyFilter(filterData: BatchFilterData | FilterType): BatchFilterData
 
 **参数说明：**
 
-| 参数名 | 类型 | 必填 | 说明 |
-| --- | --- | --- | --- |
-| filterData | BatchFilterData \| FilterType | 是 | 滤镜数据或滤镜类型 |
+| filterType | FilterType | 是 | 滤镜类型 |
+| label | string | 否 | 滤镜标签 |
+| filterParams | FilterParams | 否 | 滤镜参数 |
+| applyFilter | boolean | 否 | 是否应用滤镜，默认为true |
 
 ##### applyFilters
 

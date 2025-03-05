@@ -85,10 +85,10 @@ export class PixiFilter {
     const normalizedFilterData = filterData;
 
     // 处理滤镜叠加
-    const shouldOverlay = normalizedFilterData?.overlay ?? false;
-    if (!shouldOverlay && this.currentFilter) {
-      this.sprite.filters = [];
-    }
+    // const shouldOverlay = normalizedFilterData?.overlay ?? false;
+    // if (!shouldOverlay && this.currentFilter) {
+    //   this.sprite.filters = [];
+    // }
 
     // 创建新滤镜
     const filterCreator = this.getFilterCreator(filterType);
@@ -107,11 +107,7 @@ export class PixiFilter {
       )(this.sprite, normalizedFilterData?.filterParams ?? null);
       // 只有当滤镜存在时才应用滤镜，否则保持原图
       if (this.currentFilter) {
-        if (shouldOverlay && this.sprite.filters) {
-          this.sprite.filters.push(this.currentFilter);
-        } else {
-          this.sprite.filters = [this.currentFilter];
-        }
+        this.sprite.filters = [this.currentFilter];
       } else {
         this.sprite.filters = [];
       }
