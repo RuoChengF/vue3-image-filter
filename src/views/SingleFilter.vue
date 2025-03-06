@@ -3,6 +3,9 @@
     <div class="upload-area">
       <!-- <input type="file" @change="handleImageUpload" accept="image/*" /> -->
       <singleUploadImg @handleGetEmits="handleGetEmits" />
+      <el-button type="primary" @click="handleUseDefault"
+        >使用默认图片</el-button
+      >
     </div>
     <div class="filter-controls" v-if="currentImage">
       <el-select v-model="currentFilter" placeholder="选择滤镜效果">
@@ -29,7 +32,7 @@ import { ref, onMounted, onBeforeUnmount, toRefs } from "vue";
 import { PixiFilter } from "@/core/PixiFilter";
 import { BatchFilterData, FilterType } from "@/utils/types";
 import { ElSelect, ElOption, ElButton } from "element-plus";
-
+import defaultImage from "@/assets/default.webp";
 const currentImage = ref<string>("");
 const currentFilter = ref<FilterType>("natural");
 const processedImage = ref<any>(null);
@@ -61,7 +64,11 @@ const handleGetEmits = async (data: any) => {
     applyFilter();
   }
 };
-
+const handleUseDefault = async () => {
+  currentImage.value = defaultImage as string;
+  await filter?.loadImage(currentImage.value);
+  applyFilter();
+};
 const applyFilter = () => {
   if (filter && currentImage.value) {
     // 直接传入滤镜类型字符串

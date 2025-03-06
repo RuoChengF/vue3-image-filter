@@ -34,7 +34,11 @@ export class PixiFilter {
     this.app = new PIXI.Application({
       width: options.width || 800,
       height: options.height || 800,
-      backgroundColor: "#ffffffff",
+      backgroundColor: "#ffffff00",
+      backgroundAlpha: 0,
+      antialias: true,
+      preserveDrawingBuffer: true,
+      clearBeforeRender: true
     });
   }
 
@@ -128,7 +132,9 @@ export class PixiFilter {
    * @param filterDataArray - 滤镜数据数组，每个元素包含滤镜类型和标签
    * @returns 处理后的数据数组，每个元素包含滤镜类型和处理结果
    */
-  public applyFilterWithParams(filterDataArray: BatchFilterData[]): BatchFilterData {
+  public applyFilterWithParams(
+    filterDataArray: BatchFilterData[]
+  ): BatchFilterData {
     if (!this.sprite) {
       throw new Error("No image loaded");
     }
@@ -146,10 +152,9 @@ export class PixiFilter {
       }
 
       // 创建滤镜并应用参数
-      const filter = (filterCreator as (sprite: PIXI.Sprite, filterParams) => PIXI.Filter)(
-        this.sprite,
-        filterData.filterParams ?? null
-      );
+      const filter = (
+        filterCreator as (sprite: PIXI.Sprite, filterParams) => PIXI.Filter
+      )(this.sprite, filterData.filterParams ?? null);
 
       // 将新滤镜添加到滤镜数组中
       this.sprite.filters = [...(this.sprite.filters || []), filter];
