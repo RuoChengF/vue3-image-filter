@@ -22,6 +22,7 @@ export default defineConfig({
         target: "es2015",
         minify: "terser",
         cssCodeSplit: true,
+        outDir: "build",
         rollupOptions: {
             output: {
                 chunkFileNames: "js/[name]-[hash].js",
