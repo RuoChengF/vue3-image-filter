@@ -12,7 +12,7 @@ import brightnessShader from "../constants/shaders/basic/brightness.frag"; // �
 import contrastShader from "../constants/shaders/basic/contrast.frag"; // 导入对比度调整着色器
 import grayscaleAdjustShader from "../constants/shaders/basic/grayscale-adjust.frag"; // 导入灰度
 import invertAdjustShader from "../constants/shaders/basic/invert-adjust.frag"; // 导入反相调整着色器
-import colorAdjust from "../constants/shaders/basic/colorAdjust.frag"; // 导入饱和度调整着色器
+// import colorAdjust from "../constants/shaders/basic/colorAdjust.frag"; // 导入饱和度调整着色器
 import sepiaCustomShader from "../constants/shaders/basic/sepia-custom.frag"; // 导入自定义褐色着色器
 import * as PIXI from "pixi.js";
 import { TiltShiftFilter } from "pixi-filters";
