@@ -2,6 +2,8 @@
 
 一个基于PixiJS的图片滤镜处理插件，支持Vue3和Vue2，提供多种图片滤镜效果处理功能。
 
+## 项目案例预览
+ [vue3-image-filter](https://https://vue3-image-filter.vercel.app)
 ## 滤镜参数表
 
 以下是本项目支持的所有滤镜效果及其参数配置：
