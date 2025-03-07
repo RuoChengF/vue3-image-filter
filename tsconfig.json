@@ -1,14 +1,12 @@
 {
     "compilerOptions": {
-      "jsx": "react-jsx", // 或 "preserve"
-      "jsxImportSource": "vue", // 指定 Vue 的 JSX 语法
       "moduleResolution": "node",
       "baseUrl": ".",
       "esModuleInterop": true,
       "noEmit": true,
       "experimentalDecorators": true,
       "downlevelIteration": true,
-      "types": ["vue-router"],
+    //   "types": ["vue-router"],
       // "allowImportingTsExtensions": true,
       "paths": {
         "@/*": ["./src/*"],
