@@ -6,7 +6,7 @@ read -p "请输入提交信息: " commit_message
 # 执行 git 命令
 git add .
 git commit -m "$commit_message"
-git push origin master
+git push all master
 
 # 询问用户是否发布npm包
 read -p "是否发布npm包? (y/n): " publish_npm

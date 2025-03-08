@@ -67,8 +67,8 @@ const handleGetEmits = (data: string) => {
 // 初始化滤镜实例
 onMounted(async () => {
   filter = new PixiFilter({
-    width: 50,
-    height: 50,
+    width: 500,
+    height: 500,
   });
 
   await filter.loadImage(img1);
