@@ -7,7 +7,7 @@
     @tab-click="handleClick"
   >
     <el-tab-pane label="单图" name="single"></el-tab-pane>
-    <el-tab-pane label="多图" name="batch"></el-tab-pane>
+    <!-- <el-tab-pane label="多图" name="batch"></el-tab-pane> -->
   </el-tabs>
 </template>
 <script lang="ts" setup>
